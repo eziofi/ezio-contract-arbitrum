@@ -43,7 +43,7 @@ The following command deploy contracts into arbitrum network:
 
 The following command verify the TransparentUpgradeableProxy contract:
 
-    hardhat verify --network arbitrum {ProxyAddress}
+    npx hardhat verify --network arbitrum {ProxyAddress}
 
 The following command upgrade deployed EzVault contract:
 
