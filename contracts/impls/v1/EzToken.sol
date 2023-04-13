@@ -46,7 +46,7 @@ contract EzTokenV1 is Initializable, ERC20PausableUpgradeable, AccessControlEnum
   * @param to        Account to obtain the token
   * @param amount    Mining quantity
   */
-  function mint(address to, uint256 amount) public virtual onlyRole(MINTER_ROLE){
+  function mint(address to, uint256 amount) public virtual whenNotPaused onlyRole(MINTER_ROLE){
     _mint(to,amount);
   }
 
@@ -55,7 +55,7 @@ contract EzTokenV1 is Initializable, ERC20PausableUpgradeable, AccessControlEnum
   * @param from      Account to burn the token
   * @param amount    Burning quantity
   */
-  function burn(address from, uint256 amount) public virtual onlyRole(BURNER_ROLE) {
+  function burn(address from, uint256 amount) public virtual whenNotPaused onlyRole(BURNER_ROLE) {
     _burn(from,amount);
   }
 
