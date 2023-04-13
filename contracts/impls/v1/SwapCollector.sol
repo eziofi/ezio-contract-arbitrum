@@ -29,11 +29,11 @@ contract SwapCollectorUpgradeable is Initializable{
   * @param quote          Request Parameters
   * @return uint256       Transaction Return Quantity
   */
-  function swap(uint8 channel,bytes calldata quote) internal returns (uint256){
+  function _swap(uint8 channel,bytes calldata quote) internal returns (uint256){
     if(channel==0){
-      return zeroExSwap(quote);
+      return _zeroExSwap(quote);
     }else if(channel==1){
-      return oneInchSwap(quote);
+      return _oneInchSwap(quote);
     }else{
       revert("SwapCollector: Wrong Parameter");
     }
@@ -43,7 +43,7 @@ contract SwapCollectorUpgradeable is Initializable{
   * @notice               Trade with 0x
   * @param quote          Request Parameters
   */
-  function zeroExSwap(bytes calldata quote) internal returns (uint256){
+  function _zeroExSwap(bytes calldata quote) internal returns (uint256){
     (bool success,bytes memory data) = ZEROEX_ADDRESS.call(quote);
     (uint256 buyAmount) = abi.decode(data,(uint256));
     require(success, '0x-swap-failed');
@@ -54,24 +54,24 @@ contract SwapCollectorUpgradeable is Initializable{
   * @notice               Trade with 1inch
   * @param quote          Request Parameters
   */
-  function oneInchSwap(bytes calldata quote) internal returns (uint256) {
+  function _oneInchSwap(bytes calldata quote) internal returns (uint256) {
     (bool success, bytes memory data) = ONEINCH_ADDRESS.call(quote);
     (uint256 buyAmount,) = abi.decode(data, (uint256, uint256));
     if (!success) revert("1Inch-swap-failed");
     return buyAmount;
   }
 
-  function parseZeroExData(bytes calldata data) internal pure returns (bytes4 selector,address sellToken, address buyToken, uint256 sellAmount){
+  function _parseZeroExData(bytes calldata data) internal pure returns (bytes4 selector,address sellToken, address buyToken, uint256 sellAmount){
     /*    bytes4 selector = bytes4(keccak256("transformERC20(IERC20TokenV06,IERC20TokenV06,uint256,uint256,Transformation[])"));
         console.logBytes4(selector);
         bytes memory header = data[:4];
         console.logBytes(header);
         require(bytesToBytes4(header) == selector, "invalid selector");*/
-    selector = bytesToBytes4(data[:4]);
+    selector = _bytesToBytes4(data[:4]);
     (sellToken, buyToken, sellAmount) = abi.decode(data[4:],(address,address,uint256));
   }
 
-  function bytesToBytes4(bytes memory input) internal pure returns(bytes4 output){
+  function _bytesToBytes4(bytes memory input) internal pure returns(bytes4 output){
     assembly {
       output := mload(add(input, 32))
     }
