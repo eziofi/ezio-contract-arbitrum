@@ -88,31 +88,9 @@ const _abi = [
         type: "uint8",
       },
       {
-        components: [
-          {
-            internalType: "address",
-            name: "sellToken",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "buyToken",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "sellAmount",
-            type: "uint256",
-          },
-          {
-            internalType: "bytes",
-            name: "swapCallData",
-            type: "bytes",
-          },
-        ],
-        internalType: "struct SwapQuote[]",
+        internalType: "bytes[]",
         name: "quotes_",
-        type: "tuple[]",
+        type: "bytes[]",
       },
     ],
     name: "purchase",
@@ -143,31 +121,9 @@ const _abi = [
         type: "address",
       },
       {
-        components: [
-          {
-            internalType: "address",
-            name: "sellToken",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "buyToken",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "sellAmount",
-            type: "uint256",
-          },
-          {
-            internalType: "bytes",
-            name: "swapCallData",
-            type: "bytes",
-          },
-        ],
-        internalType: "struct SwapQuote",
+        internalType: "bytes",
         name: "quote_",
-        type: "tuple",
+        type: "bytes",
       },
     ],
     name: "redeem",

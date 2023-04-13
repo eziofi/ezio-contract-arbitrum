@@ -1,12 +1,15 @@
 import qs from "qs";
-import { SwapQuoteStruct } from "../../types/contracts/impls/v1/EzVault.sol/EzVaultV1";
 import axios from "axios";
 import {HttpsProxyAgent} from "https-proxy-agent";
+import {BigNumber} from "ethers";
+import {ethers} from "hardhat";
+import {ARBITRUM_TOKENS} from "../constants";
 
 const ZEROEX_API_QUOTE_URL = process.env.ARBITRUM_ZEROEX_API_QUOTE_URL;
 const ONEINCH_API_QUOTE_URL = process.env.ARBITRUM_ONEINCH_API_QUOTE_URL;
 
 export type ZeroExQuoteParams = {
+  skipValidation?: boolean;
   sellToken: string;
   buyToken: string;
   sellAmount: string;
@@ -23,7 +26,6 @@ export type OneInchQuoteParams = {
 };
 
 export async function getZeroExQuoteResponse(quoteParams: ZeroExQuoteParams) {
-  let quoteResponse: SwapQuoteStruct;
   let quoteUrl = `${ZEROEX_API_QUOTE_URL}?${qs.stringify(quoteParams)}`;
   //console.log("=======quoteUrl=",quoteUrl);
   let response = await fetch(quoteUrl);
@@ -33,36 +35,15 @@ export async function getZeroExQuoteResponse(quoteParams: ZeroExQuoteParams) {
   }
   let quote = await response.json();
   //console.log("=======quote=",quote);
-  quoteResponse = {
-    buyToken: quote.buyTokenAddress,
-    sellAmount: quote.sellAmount,
-    sellToken: quote.sellTokenAddress,
-    swapCallData: quote.data,
-  }
-/*  let response = await getJson(quoteUrl);
-  //console.log("=======response=",response);
-  quoteResponse = {
-    buyToken: quoteParams.buyToken,
-    sellAmount: quoteParams.sellAmount,
-    sellToken: quoteParams.sellToken,
-    swapCallData: response.data,
-  }*/
-  return quoteResponse;
+  return quote.data;
 }
 
 export async function getOneInchQuoteResponse(quoteParams: OneInchQuoteParams) {
-  let quote: SwapQuoteStruct;
   let quoteUrl = `${ONEINCH_API_QUOTE_URL}?${qs.stringify(quoteParams)}`;
   //console.log("=======quoteUrl=",quoteUrl);
   let response = await getJson(quoteUrl);
   //console.log("=======response=",response);
-  quote = {
-    buyToken: quoteParams.toTokenAddress,
-    sellAmount: quoteParams.amount,
-    sellToken: quoteParams.fromTokenAddress,
-    swapCallData: response.tx.data,
-  }
-  return quote;
+  return response.tx.data;
 }
 
 export function getJson(url: string) {
@@ -76,3 +57,11 @@ export function getJson(url: string) {
 export const http = axios.create({
   httpsAgent: new HttpsProxyAgent(`http://${process.env.PROXY_HOST}:${process.env.PROXY_PORT}`)
 })
+
+export function genNoSwapData(sellAmount: BigNumber) {
+  const selector = "0x00000000";
+  const sellToken = ARBITRUM_TOKENS.USDC;
+  const buyToken = ethers.constants.AddressZero;
+  const callData = selector + ethers.utils.solidityPack(['address', 'address','uint256'], [ethers.utils.hexZeroPad(sellToken,32), ethers.utils.hexZeroPad(buyToken,32), ethers.utils.hexZeroPad(ethers.utils.arrayify(sellAmount), 32)]).substring(2);
+  return callData;
+}

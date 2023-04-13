@@ -8,15 +8,15 @@ import {
   E2LPV1__factory,
   USDEV1,
   USDEV1__factory
-} from "../types";
-import { ARBITRUM_TOKENS, ERC20_ABI } from "../utils/constants";
+} from "../../types";
+import { ARBITRUM_TOKENS, ERC20_ABI } from "../../utils/constants";
 
 const USDC_ADDRESS = ARBITRUM_TOKENS.USDC;
 const USDT_ADDRESS = ARBITRUM_TOKENS.USDT;
 const WSTETH_ADDRESS = ARBITRUM_TOKENS.wstETH;
-const ATOKEN_JSON = require("../deployments/arbitrum/USDEV1.json");
-const BTOKEN_JSON = require("../deployments/arbitrum/E2LPV1.json");
-const EZVAULT_JSON = require("../deployments/arbitrum/EzVaultV1.json");
+const ATOKEN_JSON = require("../../deployments/arbitrum/USDEV1.json");
+const BTOKEN_JSON = require("../../deployments/arbitrum/E2LPV1.json");
+const EZVAULT_JSON = require("../../deployments/arbitrum/EzVaultV1.json");
 
 describe("contract connect test in arbitrum network", function () {
   let signer: SignerWithAddress;

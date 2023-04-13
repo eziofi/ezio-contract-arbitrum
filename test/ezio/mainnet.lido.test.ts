@@ -1,6 +1,6 @@
 import { ethers } from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
-import { MAINNET_TOKENS } from "../utils/constants";
+import { MAINNET_TOKENS } from "../../utils/constants";
 import { BigNumber, Contract } from "ethers";
 
 const LIDO_ORACLE_ABI = [

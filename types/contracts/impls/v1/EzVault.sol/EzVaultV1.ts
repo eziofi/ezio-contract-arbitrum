@@ -27,20 +27,6 @@ import type {
   PromiseOrValue,
 } from "../../../../common";
 
-export type SwapQuoteStruct = {
-  sellToken: PromiseOrValue<string>;
-  buyToken: PromiseOrValue<string>;
-  sellAmount: PromiseOrValue<BigNumberish>;
-  swapCallData: PromiseOrValue<BytesLike>;
-};
-
-export type SwapQuoteStructOutput = [string, string, BigNumber, string] & {
-  sellToken: string;
-  buyToken: string;
-  sellAmount: BigNumber;
-  swapCallData: string;
-};
-
 export interface EzVaultV1Interface extends utils.Interface {
   functions: {
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
@@ -57,7 +43,7 @@ export interface EzVaultV1Interface extends utils.Interface {
     "changeList(uint8)": FunctionFragment;
     "check()": FunctionFragment;
     "convertAmt(address,address,uint256)": FunctionFragment;
-    "convertDown(uint8,(address,address,uint256,bytes))": FunctionFragment;
+    "convertDown(uint8,bytes)": FunctionFragment;
     "convertDownPrice()": FunctionFragment;
     "getPrice(address)": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
@@ -71,9 +57,9 @@ export interface EzVaultV1Interface extends utils.Interface {
     "leverage()": FunctionFragment;
     "matchedA()": FunctionFragment;
     "pooledA()": FunctionFragment;
-    "purchase(uint8,uint8,(address,address,uint256,bytes)[])": FunctionFragment;
+    "purchase(uint8,uint8,bytes[])": FunctionFragment;
     "rebase()": FunctionFragment;
-    "redeem(uint8,uint8,uint256,address,(address,address,uint256,bytes))": FunctionFragment;
+    "redeem(uint8,uint8,uint256,address,bytes)": FunctionFragment;
     "redeemFeeRateA()": FunctionFragment;
     "redeemFeeRateB()": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
@@ -91,7 +77,7 @@ export interface EzVaultV1Interface extends utils.Interface {
     "totalCommission()": FunctionFragment;
     "totalNetWorth()": FunctionFragment;
     "totalReserve()": FunctionFragment;
-    "withdraw(uint256,uint8,(address,address,uint256,bytes))": FunctionFragment;
+    "withdraw(uint256,uint8,bytes)": FunctionFragment;
   };
 
   getFunction(
@@ -206,7 +192,7 @@ export interface EzVaultV1Interface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "convertDown",
-    values: [PromiseOrValue<BigNumberish>, SwapQuoteStruct]
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "convertDownPrice",
@@ -265,7 +251,7 @@ export interface EzVaultV1Interface extends utils.Interface {
     values: [
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
-      SwapQuoteStruct[]
+      PromiseOrValue<BytesLike>[]
     ]
   ): string;
   encodeFunctionData(functionFragment: "rebase", values?: undefined): string;
@@ -276,7 +262,7 @@ export interface EzVaultV1Interface extends utils.Interface {
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>,
-      SwapQuoteStruct
+      PromiseOrValue<BytesLike>
     ]
   ): string;
   encodeFunctionData(
@@ -356,7 +342,7 @@ export interface EzVaultV1Interface extends utils.Interface {
     values: [
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
-      SwapQuoteStruct
+      PromiseOrValue<BytesLike>
     ]
   ): string;
 
@@ -694,7 +680,7 @@ export interface EzVaultV1 extends BaseContract {
 
     convertDown(
       channel_: PromiseOrValue<BigNumberish>,
-      quote_: SwapQuoteStruct,
+      quote_: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -758,7 +744,7 @@ export interface EzVaultV1 extends BaseContract {
     purchase(
       type_: PromiseOrValue<BigNumberish>,
       channel_: PromiseOrValue<BigNumberish>,
-      quotes_: SwapQuoteStruct[],
+      quotes_: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -771,7 +757,7 @@ export interface EzVaultV1 extends BaseContract {
       channel_: PromiseOrValue<BigNumberish>,
       qty_: PromiseOrValue<BigNumberish>,
       token_: PromiseOrValue<string>,
-      quote_: SwapQuoteStruct,
+      quote_: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -850,7 +836,7 @@ export interface EzVaultV1 extends BaseContract {
     withdraw(
       amount: PromiseOrValue<BigNumberish>,
       channel_: PromiseOrValue<BigNumberish>,
-      quote_: SwapQuoteStruct,
+      quote_: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
@@ -896,7 +882,7 @@ export interface EzVaultV1 extends BaseContract {
 
   convertDown(
     channel_: PromiseOrValue<BigNumberish>,
-    quote_: SwapQuoteStruct,
+    quote_: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -960,7 +946,7 @@ export interface EzVaultV1 extends BaseContract {
   purchase(
     type_: PromiseOrValue<BigNumberish>,
     channel_: PromiseOrValue<BigNumberish>,
-    quotes_: SwapQuoteStruct[],
+    quotes_: PromiseOrValue<BytesLike>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -973,7 +959,7 @@ export interface EzVaultV1 extends BaseContract {
     channel_: PromiseOrValue<BigNumberish>,
     qty_: PromiseOrValue<BigNumberish>,
     token_: PromiseOrValue<string>,
-    quote_: SwapQuoteStruct,
+    quote_: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1052,7 +1038,7 @@ export interface EzVaultV1 extends BaseContract {
   withdraw(
     amount: PromiseOrValue<BigNumberish>,
     channel_: PromiseOrValue<BigNumberish>,
-    quote_: SwapQuoteStruct,
+    quote_: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1098,7 +1084,7 @@ export interface EzVaultV1 extends BaseContract {
 
     convertDown(
       channel_: PromiseOrValue<BigNumberish>,
-      quote_: SwapQuoteStruct,
+      quote_: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1162,7 +1148,7 @@ export interface EzVaultV1 extends BaseContract {
     purchase(
       type_: PromiseOrValue<BigNumberish>,
       channel_: PromiseOrValue<BigNumberish>,
-      quotes_: SwapQuoteStruct[],
+      quotes_: PromiseOrValue<BytesLike>[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1173,7 +1159,7 @@ export interface EzVaultV1 extends BaseContract {
       channel_: PromiseOrValue<BigNumberish>,
       qty_: PromiseOrValue<BigNumberish>,
       token_: PromiseOrValue<string>,
-      quote_: SwapQuoteStruct,
+      quote_: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1252,7 +1238,7 @@ export interface EzVaultV1 extends BaseContract {
     withdraw(
       amount: PromiseOrValue<BigNumberish>,
       channel_: PromiseOrValue<BigNumberish>,
-      quote_: SwapQuoteStruct,
+      quote_: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -1391,7 +1377,7 @@ export interface EzVaultV1 extends BaseContract {
 
     convertDown(
       channel_: PromiseOrValue<BigNumberish>,
-      quote_: SwapQuoteStruct,
+      quote_: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1455,7 +1441,7 @@ export interface EzVaultV1 extends BaseContract {
     purchase(
       type_: PromiseOrValue<BigNumberish>,
       channel_: PromiseOrValue<BigNumberish>,
-      quotes_: SwapQuoteStruct[],
+      quotes_: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1468,7 +1454,7 @@ export interface EzVaultV1 extends BaseContract {
       channel_: PromiseOrValue<BigNumberish>,
       qty_: PromiseOrValue<BigNumberish>,
       token_: PromiseOrValue<string>,
-      quote_: SwapQuoteStruct,
+      quote_: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1547,7 +1533,7 @@ export interface EzVaultV1 extends BaseContract {
     withdraw(
       amount: PromiseOrValue<BigNumberish>,
       channel_: PromiseOrValue<BigNumberish>,
-      quote_: SwapQuoteStruct,
+      quote_: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
@@ -1608,7 +1594,7 @@ export interface EzVaultV1 extends BaseContract {
 
     convertDown(
       channel_: PromiseOrValue<BigNumberish>,
-      quote_: SwapQuoteStruct,
+      quote_: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1672,7 +1658,7 @@ export interface EzVaultV1 extends BaseContract {
     purchase(
       type_: PromiseOrValue<BigNumberish>,
       channel_: PromiseOrValue<BigNumberish>,
-      quotes_: SwapQuoteStruct[],
+      quotes_: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1685,7 +1671,7 @@ export interface EzVaultV1 extends BaseContract {
       channel_: PromiseOrValue<BigNumberish>,
       qty_: PromiseOrValue<BigNumberish>,
       token_: PromiseOrValue<string>,
-      quote_: SwapQuoteStruct,
+      quote_: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1764,7 +1750,7 @@ export interface EzVaultV1 extends BaseContract {
     withdraw(
       amount: PromiseOrValue<BigNumberish>,
       channel_: PromiseOrValue<BigNumberish>,
-      quote_: SwapQuoteStruct,
+      quote_: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

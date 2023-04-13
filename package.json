@@ -7,7 +7,7 @@
     "clean": "hardhat clean",
     "compile": "hardhat compile",
     "start": "hardhat node",
-    "test:arbitrum": "hardhat test ./test/arbitrum_fork.test.ts",
+    "test:arbitrum": "hardhat test test/fork/integration_test.ts",
     "deploy:arbitrum": "hardhat --network arbitrum deploy",
     "verify:arbitrum": "hardhat verify --network arbitrum 0xc093b6D04A983164838cb9d41843DEF3CC8A6d32",
     "upgrade:arbitrum": "hardhat --network arbitrum run ./scripts/upgrade/ezio_upgrade.ts",

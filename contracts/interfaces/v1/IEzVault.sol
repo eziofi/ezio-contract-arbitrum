@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./ISwapCollector.sol";
-
 interface IEzVault {
   //token type
   enum TYPE{
@@ -16,7 +14,7 @@ interface IEzVault {
   * @param channel_      0 represent 0x,1 represent 1inch
   * @param quotes_       Request parameters
   */
-  function purchase(TYPE type_,uint8 channel_,SwapQuote[] calldata quotes_) external;
+  function purchase(TYPE type_,uint8 channel_,bytes[] calldata quotes_) external;
 
   /**
   * @notice              Investors redeem aToken or bToken
@@ -26,7 +24,7 @@ interface IEzVault {
   * @param token_        The token to be returned
   * @param quote_        Request parameters
   */
-  function redeem(TYPE type_,uint8 channel_,uint256 qty_,address token_,SwapQuote calldata quote_) external;
+  function redeem(TYPE type_,uint8 channel_,uint256 qty_,address token_,bytes calldata quote_) external;
 
   /**
   * @notice               The total reserve net value of the vault = the total reserve amount * the current reserve coin price + pooledA

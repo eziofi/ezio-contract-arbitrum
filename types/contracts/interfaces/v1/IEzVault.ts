@@ -23,20 +23,6 @@ import type {
   PromiseOrValue,
 } from "../../../common";
 
-export type SwapQuoteStruct = {
-  sellToken: PromiseOrValue<string>;
-  buyToken: PromiseOrValue<string>;
-  sellAmount: PromiseOrValue<BigNumberish>;
-  swapCallData: PromiseOrValue<BytesLike>;
-};
-
-export type SwapQuoteStructOutput = [string, string, BigNumber, string] & {
-  sellToken: string;
-  buyToken: string;
-  sellAmount: BigNumber;
-  swapCallData: string;
-};
-
 export interface IEzVaultInterface extends utils.Interface {
   functions: {
     "convertDownPrice()": FunctionFragment;
@@ -44,8 +30,8 @@ export interface IEzVaultInterface extends utils.Interface {
     "leverage()": FunctionFragment;
     "matchedA()": FunctionFragment;
     "pooledA()": FunctionFragment;
-    "purchase(uint8,uint8,(address,address,uint256,bytes)[])": FunctionFragment;
-    "redeem(uint8,uint8,uint256,address,(address,address,uint256,bytes))": FunctionFragment;
+    "purchase(uint8,uint8,bytes[])": FunctionFragment;
+    "redeem(uint8,uint8,uint256,address,bytes)": FunctionFragment;
     "totalNetWorth()": FunctionFragment;
   };
 
@@ -77,7 +63,7 @@ export interface IEzVaultInterface extends utils.Interface {
     values: [
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
-      SwapQuoteStruct[]
+      PromiseOrValue<BytesLike>[]
     ]
   ): string;
   encodeFunctionData(
@@ -87,7 +73,7 @@ export interface IEzVaultInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>,
-      SwapQuoteStruct
+      PromiseOrValue<BytesLike>
     ]
   ): string;
   encodeFunctionData(
@@ -156,7 +142,7 @@ export interface IEzVault extends BaseContract {
     purchase(
       type_: PromiseOrValue<BigNumberish>,
       channel_: PromiseOrValue<BigNumberish>,
-      quotes_: SwapQuoteStruct[],
+      quotes_: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -165,7 +151,7 @@ export interface IEzVault extends BaseContract {
       channel_: PromiseOrValue<BigNumberish>,
       qty_: PromiseOrValue<BigNumberish>,
       token_: PromiseOrValue<string>,
-      quote_: SwapQuoteStruct,
+      quote_: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -185,7 +171,7 @@ export interface IEzVault extends BaseContract {
   purchase(
     type_: PromiseOrValue<BigNumberish>,
     channel_: PromiseOrValue<BigNumberish>,
-    quotes_: SwapQuoteStruct[],
+    quotes_: PromiseOrValue<BytesLike>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -194,7 +180,7 @@ export interface IEzVault extends BaseContract {
     channel_: PromiseOrValue<BigNumberish>,
     qty_: PromiseOrValue<BigNumberish>,
     token_: PromiseOrValue<string>,
-    quote_: SwapQuoteStruct,
+    quote_: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -214,7 +200,7 @@ export interface IEzVault extends BaseContract {
     purchase(
       type_: PromiseOrValue<BigNumberish>,
       channel_: PromiseOrValue<BigNumberish>,
-      quotes_: SwapQuoteStruct[],
+      quotes_: PromiseOrValue<BytesLike>[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -223,7 +209,7 @@ export interface IEzVault extends BaseContract {
       channel_: PromiseOrValue<BigNumberish>,
       qty_: PromiseOrValue<BigNumberish>,
       token_: PromiseOrValue<string>,
-      quote_: SwapQuoteStruct,
+      quote_: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -246,7 +232,7 @@ export interface IEzVault extends BaseContract {
     purchase(
       type_: PromiseOrValue<BigNumberish>,
       channel_: PromiseOrValue<BigNumberish>,
-      quotes_: SwapQuoteStruct[],
+      quotes_: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -255,7 +241,7 @@ export interface IEzVault extends BaseContract {
       channel_: PromiseOrValue<BigNumberish>,
       qty_: PromiseOrValue<BigNumberish>,
       token_: PromiseOrValue<string>,
-      quote_: SwapQuoteStruct,
+      quote_: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -276,7 +262,7 @@ export interface IEzVault extends BaseContract {
     purchase(
       type_: PromiseOrValue<BigNumberish>,
       channel_: PromiseOrValue<BigNumberish>,
-      quotes_: SwapQuoteStruct[],
+      quotes_: PromiseOrValue<BytesLike>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -285,7 +271,7 @@ export interface IEzVault extends BaseContract {
       channel_: PromiseOrValue<BigNumberish>,
       qty_: PromiseOrValue<BigNumberish>,
       token_: PromiseOrValue<string>,
-      quote_: SwapQuoteStruct,
+      quote_: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

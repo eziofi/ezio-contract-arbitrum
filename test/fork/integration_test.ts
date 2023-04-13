@@ -4,17 +4,16 @@ import {
   USDEV1, USDEV1__factory,
   E2LPV1, E2LPV1__factory,
   EzVaultV1, EzVaultV1__factory
-} from "../types";
-import { BigNumber, Contract } from "ethers";
+} from "../../types";
+import {BigNumber, BytesLike, Contract} from "ethers";
 import {
   ERC20_ABI,
   MAX_UINT256,
   ARBITRUM_TOKENS,
   MAINNET_TOKENS,
-} from "../utils/constants";
-import { getZeroExQuoteResponse, ZeroExQuoteParams } from "../utils/swap";
-import { SwapQuoteStruct } from "../types/contracts/impls/v1/EzVault.sol/EzVaultV1";
-import { firstRebaseTime } from "../utils/date";
+} from "../../utils/constants";
+import {genNoSwapData, getZeroExQuoteResponse, ZeroExQuoteParams} from "../../utils/swap";
+import { firstRebaseTime } from "../../utils/date";
 const hre = require("hardhat");
 
 const USDC_ADDRESS = ARBITRUM_TOKENS.USDC;
@@ -96,12 +95,7 @@ describe("fork test",()=>{
     console.log("---------USDT price",await vault.getPrice(USDT_ADDRESS));
     console.log("---------WSTETH price",await vault.getPrice(WSTETH_ADDRESS));
     //USDCTaker use 4000USDC to purchases aToken
-    let quoteResponse2 = {
-      sellToken: USDC_ADDRESS,
-      buyToken: ethers.constants.AddressZero,
-      sellAmount: "4000000000",
-      swapCallData: ethers.constants.HashZero,
-    };
+    let quoteResponse2 = genNoSwapData(BigNumber.from("4000000000"))
     let quotes2 = [quoteResponse2];
     await vault.connect(usdcTaker).purchase(0,0,quotes2);
 
@@ -116,8 +110,9 @@ describe("fork test",()=>{
     let quotes1 = [quoteResponse1];
     await vault.connect(usdtTaker).purchase(0,0,quotes1);
 
+
     //USDtTaker uses 6000USDT to purchase bToken
-    let quotes3: SwapQuoteStruct[];
+    let quotes3: BytesLike[];
     let quoteParams3: ZeroExQuoteParams = {
       sellToken: USDT_ADDRESS,
       buyToken: WSTETH_ADDRESS,
@@ -176,6 +171,30 @@ describe("fork test",()=>{
     }
     let quoteResponse5 = await getZeroExQuoteResponse(quoteParams5);
     await vault.connect(usdcTaker).redeem(0,0,redeemAmount1,USDC_ADDRESS,quoteResponse5);
+
+    console.log("-----------signer usdc balance=",await usdc.balanceOf(signer.address));
+    console.log("-----------vault wstETH balance",await wstETH.balanceOf(vault.address));
+    console.log("-----------vault usdc balance=",await usdc.balanceOf(vault.address));
+    console.log("-----------usdtTaker aToken=",await aToken.balanceOf(usdtTaker.address));
+    console.log("-----------usdcTaker aToken=",await aToken.balanceOf(usdcTaker.address));
+    console.log("-----------usdtTaker bToken=",await bToken.balanceOf(usdtTaker.address));
+    console.log("-----------usdtTaker wstETH=",await wstETH.balanceOf(usdtTaker.address));
+    console.log("-----------aToken shareNetWorth=",await aToken.shareNetWorth());
+    console.log("-----------aToken totalNetWorth=",await aToken.totalNetWorth());
+    console.log("-----------aToken totalShare=",await aToken.totalShare());
+    console.log("-----------aToken totalSupply=",await aToken.totalSupply());
+    console.log("-----------bToken totalNetWorth=",await bToken.totalNetWorth());
+    console.log("-----------bToken netWorth=",await bToken.netWorth());
+    console.log("-----------bToken totalSupply=",await bToken.totalSupply());
+    console.log("-----------vault pooledA=",await vault.pooledA());
+    console.log("-----------vault matchedA=",await vault.matchedA());
+    console.log("-----------vault totalReserve=",await vault.totalReserve());
+    console.log("-----------vault totalNetWorth=",await vault.totalNetWorth());
+    console.log("-----------convertDownPrice=",await vault.convertDownPrice());
+    console.log("-----------leverage=",await vault.leverage());
+    console.log("-----------interestRate=",await vault.interestRate());
+    console.log("-----------totalCommission=",await vault.totalCommission());
+    console.log("================================================");
 
     //usdcTaker redeem 2000 bToken to exchange for WSTETH
     let redeemAmount2 = ethers.utils.parseEther("2000");
