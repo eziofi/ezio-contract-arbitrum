@@ -13,7 +13,7 @@ import "../../impls/v1/SwapCollector.sol";
 import "../../interfaces/v1/IEzVault.sol";
 //import "hardhat/console.sol";
 
-contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,ConversionUpgradeable,SwapCollectorUpgradeable,IEzVault{
+contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeable,ConversionUpgradeable,SwapCollectorUpgradeable,IEzVault{
   struct ChangeData{
     uint16 value;
     uint256 deadLine;
@@ -25,6 +25,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,ConversionUpgrade
   string internal constant WRONG_BUY_TOKEN = "EzVault: Wrong Buy Token";
   string internal constant WRONG_SELL_TOKEN = "EzVault: Wrong Sell Token";
   string internal constant WRONG_AMOUNT = "EzVault: Wrong Amount";
+  string internal constant NOT_CONVERT_DOWN = "EzVault: Not Convert Down";
   //Ezio Stablecoin
   USDEV1 private aToken;
   //Ezio 2x Leverage wstETH Index
@@ -86,6 +87,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,ConversionUpgrade
   function initialize(IERC20MetadataUpgradeable stableToken_,IERC20MetadataUpgradeable reserveToken_,USDEV1 aToken_,E2LPV1 bToken_,uint16 rewardRate_,uint16 redeemFeeRateA_,uint16 redeemFeeRateB_,uint256 lastRebaseTime_) external initializer {
     __AccessControlEnumerable_init();
     __ReentrancyGuard_init();
+    __Pausable_init();
     __Conversion_init(stableToken_,reserveToken_);
     __SwapCollector_init();
     aToken = aToken_;
@@ -105,7 +107,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,ConversionUpgrade
   * @param channel_      0 represent 0x,1 represent 1inch
   * @param quotes_       Request parameters
   */
-  function purchase(TYPE type_,uint8 channel_,bytes[] calldata quotes_) external nonReentrant{
+  function purchase(TYPE type_,uint8 channel_,bytes[] calldata quotes_) external nonReentrant whenNotPaused{
     require(quotes_.length==1||quotes_.length==2,WRONG_PARAMETER);
     (,address sellToken,address buyToken,uint256 sellAmount) = parseZeroExData(quotes_[0]);
     require(sellAmount>0,WRONG_PARAMETER);
@@ -177,7 +179,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,ConversionUpgrade
   * @param token_        The token to be returned
   * @param quote_        Request parameters
   */
-  function redeem(TYPE type_,uint8 channel_,uint256 qty_,address token_,bytes calldata quote_) external nonReentrant{
+  function redeem(TYPE type_,uint8 channel_,uint256 qty_,address token_,bytes calldata quote_) external nonReentrant whenNotPaused{
     require(qty_>0,WRONG_PARAMETER);
     (,address sellToken,address buyToken,uint256 sellAmount) = parseZeroExData(quote_);
     if(type_ == TYPE.A){
@@ -295,10 +297,12 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,ConversionUpgrade
   /**
   * @notice    Check the Paired Funds of bToken, if it is less than 60% of the Paired Funds of aToken, trigger downward rebase
   */
-  function check() external view returns(bool convertDownFlag) {
+  function check() public view returns(bool) {
     if(bToken.totalNetWorth()<matchedA*3/5){
       //The indication of downward rebase is determined as true
-      convertDownFlag = true;
+      return true;
+    }else{
+      return false;
     }
   }
 
@@ -316,6 +320,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,ConversionUpgrade
   * @param quote_       Request parameters
   */
   function convertDown(uint8 channel_,bytes calldata quote_) external onlyRole(OPERATOR_ROLE) nonReentrant{
+    require(check(),NOT_CONVERT_DOWN);
     (,address sellToken,address buyToken,uint256 sellAmount) = parseZeroExData(quote_);
     require(sellToken==address(reserveToken),WRONG_SELL_TOKEN);
     require(buyToken==address(stableToken),WRONG_BUY_TOKEN);
@@ -332,7 +337,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,ConversionUpgrade
   /**
   * @notice               rebase,increase in Paired Funds of aToken
   */
-  function rebase() external nonReentrant{
+  function rebase() external nonReentrant whenNotPaused{
     if(changeList[0].value>0&&block.timestamp>=changeList[0].deadLine){
       rewardRate = changeList[0].value;
       emit Change(0,rewardRate,block.timestamp);
@@ -414,7 +419,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,ConversionUpgrade
   * @param channel      0 represent 0x,1 represent 1inch
   * @param amount       Credit limit
   */
-  function setApprove(IERC20MetadataUpgradeable token,uint8 channel,uint256 amount) external onlyRole(OPERATOR_ROLE) nonReentrant{
+  function setApprove(IERC20MetadataUpgradeable token,uint8 channel,uint256 amount) external onlyRole(OPERATOR_ROLE) nonReentrant whenNotPaused{
     if(channel==0){
       token.approve(ZEROEX_ADDRESS, amount);
     }else if(channel==1){
@@ -422,6 +427,20 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,ConversionUpgrade
     }else{
       revert(WRONG_PARAMETER);
     }
+  }
+
+  /**
+  * @notice     Pause the contract
+  */
+  function pause() external onlyRole(GOVERNOR_ROLE) nonReentrant{
+    super._pause();
+  }
+
+  /**
+* @notice     Unpause the contract
+  */
+  function unpause() external onlyRole(GOVERNOR_ROLE) nonReentrant{
+    super._unpause();
   }
 
 }

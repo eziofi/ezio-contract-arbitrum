@@ -56,6 +56,8 @@ export interface EzVaultV1Interface extends utils.Interface {
     "lastRebaseTime()": FunctionFragment;
     "leverage()": FunctionFragment;
     "matchedA()": FunctionFragment;
+    "pause()": FunctionFragment;
+    "paused()": FunctionFragment;
     "pooledA()": FunctionFragment;
     "purchase(uint8,uint8,bytes[])": FunctionFragment;
     "rebase()": FunctionFragment;
@@ -77,6 +79,7 @@ export interface EzVaultV1Interface extends utils.Interface {
     "totalCommission()": FunctionFragment;
     "totalNetWorth()": FunctionFragment;
     "totalReserve()": FunctionFragment;
+    "unpause()": FunctionFragment;
     "withdraw(uint256,uint8,bytes)": FunctionFragment;
   };
 
@@ -109,6 +112,8 @@ export interface EzVaultV1Interface extends utils.Interface {
       | "lastRebaseTime"
       | "leverage"
       | "matchedA"
+      | "pause"
+      | "paused"
       | "pooledA"
       | "purchase"
       | "rebase"
@@ -130,6 +135,7 @@ export interface EzVaultV1Interface extends utils.Interface {
       | "totalCommission"
       | "totalNetWorth"
       | "totalReserve"
+      | "unpause"
       | "withdraw"
   ): FunctionFragment;
 
@@ -245,6 +251,8 @@ export interface EzVaultV1Interface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "leverage", values?: undefined): string;
   encodeFunctionData(functionFragment: "matchedA", values?: undefined): string;
+  encodeFunctionData(functionFragment: "pause", values?: undefined): string;
+  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(functionFragment: "pooledA", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "purchase",
@@ -337,6 +345,7 @@ export interface EzVaultV1Interface extends utils.Interface {
     functionFragment: "totalReserve",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "withdraw",
     values: [
@@ -427,6 +436,8 @@ export interface EzVaultV1Interface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "leverage", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "matchedA", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pooledA", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "purchase", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "rebase", data: BytesLike): Result;
@@ -490,27 +501,32 @@ export interface EzVaultV1Interface extends utils.Interface {
     functionFragment: "totalReserve",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
     "Change(uint8,uint16,uint256)": EventFragment;
     "ConvertDown(uint256,uint256,uint256)": EventFragment;
     "Initialized(uint8)": EventFragment;
+    "Paused(address)": EventFragment;
     "Purchase(address,uint8,uint256,uint256)": EventFragment;
     "Redeem(address,uint8,uint256,uint256,uint256,uint256,uint256)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
+    "Unpaused(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Change"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ConvertDown"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Purchase"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Redeem"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
 }
 
 export interface ChangeEventObject {
@@ -543,6 +559,13 @@ export interface InitializedEventObject {
 export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
 
 export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
+
+export interface PausedEventObject {
+  account: string;
+}
+export type PausedEvent = TypedEvent<[string], PausedEventObject>;
+
+export type PausedEventFilter = TypedEventFilter<PausedEvent>;
 
 export interface PurchaseEventObject {
   account: string;
@@ -610,6 +633,13 @@ export type RoleRevokedEvent = TypedEvent<
 
 export type RoleRevokedEventFilter = TypedEventFilter<RoleRevokedEvent>;
 
+export interface UnpausedEventObject {
+  account: string;
+}
+export type UnpausedEvent = TypedEvent<[string], UnpausedEventObject>;
+
+export type UnpausedEventFilter = TypedEventFilter<UnpausedEvent>;
+
 export interface EzVaultV1 extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
@@ -667,9 +697,7 @@ export interface EzVaultV1 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[number, BigNumber] & { value: number; deadLine: BigNumber }>;
 
-    check(
-      overrides?: CallOverrides
-    ): Promise<[boolean] & { convertDownFlag: boolean }>;
+    check(overrides?: CallOverrides): Promise<[boolean]>;
 
     convertAmt(
       sourceAddress: PromiseOrValue<string>,
@@ -738,6 +766,12 @@ export interface EzVaultV1 extends BaseContract {
     leverage(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     matchedA(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    pause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    paused(overrides?: CallOverrides): Promise<[boolean]>;
 
     pooledA(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -832,6 +866,10 @@ export interface EzVaultV1 extends BaseContract {
     totalNetWorth(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     totalReserve(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    unpause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     withdraw(
       amount: PromiseOrValue<BigNumberish>,
@@ -941,6 +979,12 @@ export interface EzVaultV1 extends BaseContract {
 
   matchedA(overrides?: CallOverrides): Promise<BigNumber>;
 
+  pause(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  paused(overrides?: CallOverrides): Promise<boolean>;
+
   pooledA(overrides?: CallOverrides): Promise<BigNumber>;
 
   purchase(
@@ -1034,6 +1078,10 @@ export interface EzVaultV1 extends BaseContract {
   totalNetWorth(overrides?: CallOverrides): Promise<BigNumber>;
 
   totalReserve(overrides?: CallOverrides): Promise<BigNumber>;
+
+  unpause(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   withdraw(
     amount: PromiseOrValue<BigNumberish>,
@@ -1143,6 +1191,10 @@ export interface EzVaultV1 extends BaseContract {
 
     matchedA(overrides?: CallOverrides): Promise<BigNumber>;
 
+    pause(overrides?: CallOverrides): Promise<void>;
+
+    paused(overrides?: CallOverrides): Promise<boolean>;
+
     pooledA(overrides?: CallOverrides): Promise<BigNumber>;
 
     purchase(
@@ -1235,6 +1287,8 @@ export interface EzVaultV1 extends BaseContract {
 
     totalReserve(overrides?: CallOverrides): Promise<BigNumber>;
 
+    unpause(overrides?: CallOverrides): Promise<void>;
+
     withdraw(
       amount: PromiseOrValue<BigNumberish>,
       channel_: PromiseOrValue<BigNumberish>,
@@ -1268,6 +1322,9 @@ export interface EzVaultV1 extends BaseContract {
 
     "Initialized(uint8)"(version?: null): InitializedEventFilter;
     Initialized(version?: null): InitializedEventFilter;
+
+    "Paused(address)"(account?: null): PausedEventFilter;
+    Paused(account?: null): PausedEventFilter;
 
     "Purchase(address,uint8,uint256,uint256)"(
       account?: PromiseOrValue<string> | null,
@@ -1333,6 +1390,9 @@ export interface EzVaultV1 extends BaseContract {
       account?: PromiseOrValue<string> | null,
       sender?: PromiseOrValue<string> | null
     ): RoleRevokedEventFilter;
+
+    "Unpaused(address)"(account?: null): UnpausedEventFilter;
+    Unpaused(account?: null): UnpausedEventFilter;
   };
 
   estimateGas: {
@@ -1436,6 +1496,12 @@ export interface EzVaultV1 extends BaseContract {
 
     matchedA(overrides?: CallOverrides): Promise<BigNumber>;
 
+    pause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    paused(overrides?: CallOverrides): Promise<BigNumber>;
+
     pooledA(overrides?: CallOverrides): Promise<BigNumber>;
 
     purchase(
@@ -1529,6 +1595,10 @@ export interface EzVaultV1 extends BaseContract {
     totalNetWorth(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalReserve(overrides?: CallOverrides): Promise<BigNumber>;
+
+    unpause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
 
     withdraw(
       amount: PromiseOrValue<BigNumberish>,
@@ -1653,6 +1723,12 @@ export interface EzVaultV1 extends BaseContract {
 
     matchedA(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    pause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     pooledA(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     purchase(
@@ -1746,6 +1822,10 @@ export interface EzVaultV1 extends BaseContract {
     totalNetWorth(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     totalReserve(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    unpause(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
 
     withdraw(
       amount: PromiseOrValue<BigNumberish>,
