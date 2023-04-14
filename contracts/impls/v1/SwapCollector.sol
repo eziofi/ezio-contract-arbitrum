@@ -33,10 +33,12 @@ contract SwapCollectorUpgradeable is Initializable{
   * @param quote          Request Parameters
   * @return uint256       Transaction Return Quantity
   */
-  function _swap(uint8 channel,bytes calldata quote) internal returns (uint256){
+  function _swap(uint8 channel,bytes calldata quote,address sellToken,uint256 sellAmount) internal returns (uint256){
     if(channel==0){
+      IERC20MetadataUpgradeable(sellToken).safeIncreaseAllowance(ZEROEX_ADDRESS,sellAmount);
       return _zeroExSwap(quote);
     }else if(channel==1){
+      IERC20MetadataUpgradeable(sellToken).safeIncreaseAllowance(ONEINCH_ADDRESS,sellAmount);
       return _oneInchSwap(quote);
     }else{
       revert("SwapCollector: Wrong Parameter");

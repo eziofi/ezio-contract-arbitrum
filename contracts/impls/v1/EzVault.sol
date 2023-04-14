@@ -121,7 +121,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeab
       }else{
         //Trade with an exchange for STABLE_COIN
         require(buyToken==address(stableToken),WRONG_BUY_TOKEN);
-        stableAmount = _swap(channel_,quotes_[0]);
+        stableAmount = _swap(channel_,quotes_[0],sellToken,sellAmount);
       }
       require(stableAmount>0,WRONG_AMOUNT);
       //Mining aToken for investors
@@ -146,7 +146,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeab
       //console.log("bToken qty=",qty);
       bToken.mint(msg.sender, qty);
       //Trading with the exchange using us
-      totalReserve += _swap(channel_,quotes_[0]);
+      totalReserve += _swap(channel_,quotes_[0],sellToken,sellAmount);
       emit Purchase(msg.sender,TYPE.B,stableAmount,qty);
     }else{
       revert(INVALID_TOKEN);
@@ -167,7 +167,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeab
       pooledA -= stableAmountExt;
       matchedA += stableAmountExt;
       //Using reserve funds to trade with the exchange for reserve coins, increasing totalReserve
-      totalReserve += _swap(channel_,quotes_[1]);
+      totalReserve += _swap(channel_,quotes_[1],sellTokenExt,sellAmountExt);
     }
   }
 
@@ -198,7 +198,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeab
         require(sellToken==address(reserveToken),WRONG_SELL_TOKEN);
         require(buyToken==address(stableToken),WRONG_BUY_TOKEN);
         require(sellAmount==saleQty,WRONG_AMOUNT);
-        _swap(channel_,quote_);
+        _swap(channel_,quote_,sellToken,sellAmount);
         //burn aToken
         aToken.burn(msg.sender,qty_);
         totalReserve -= saleQty;
@@ -220,7 +220,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeab
         require(sellToken==address(reserveToken),WRONG_SELL_TOKEN);
         require(buyToken==address(stableToken),WRONG_BUY_TOKEN);
         require(sellAmount==saleAmount,WRONG_AMOUNT);
-        _swap(channel_,quote_);
+        _swap(channel_,quote_,sellToken,sellAmount);
         //Burn bToken
         bToken.burn(msg.sender,qty_);
         totalReserve -= saleQty;
@@ -242,7 +242,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeab
           require(sellToken==address(reserveToken),WRONG_SELL_TOKEN);
           require(buyToken==address(stableToken),WRONG_BUY_TOKEN);
           require(sellAmount==saleQty,WRONG_AMOUNT);
-          _swap(channel_,quote_);
+          _swap(channel_,quote_,sellToken,sellAmount);
           pooledA += saleAmount;
           matchedA -= saleAmount;
         }
@@ -330,7 +330,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeab
     totalReserve -= sellAmount;
     matchedA -= buyAmount;
     pooledA += buyAmount;
-    _swap(channel_,quote_);
+    _swap(channel_,quote_,sellToken,sellAmount);
     emit ConvertDown(matchedA, totalReserve, block.timestamp);
   }
 
@@ -407,7 +407,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeab
       require(sellToken==address(reserveToken),WRONG_SELL_TOKEN);
       require(buyToken==address(stableToken),WRONG_BUY_TOKEN);
       require(sellAmount == amount * 1e18 / getPrice(address(reserveToken)),WRONG_AMOUNT);
-      receiveAmount = _swap(channel_,quote_);
+      receiveAmount = _swap(channel_,quote_,sellToken,sellAmount);
     }
     totalCommission -= amount;
     stableToken.safeTransfer(msg.sender, receiveAmount);

@@ -2,7 +2,7 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import { ethers, upgrades } from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
-import { ARBITRUM_TOKENS, MAINNET_TOKENS, MAX_UINT256 } from "../../utils/constants";
+import { ARBITRUM_TOKENS, MAINNET_TOKENS } from "../../utils/constants";
 import { write } from "../../utils/io";
 import {
   EzVaultV1,
@@ -13,6 +13,7 @@ import {
   USDEV1__factory
 } from "../../types";
 import {firstRebaseTime} from "../../utils/date";
+import {BigNumber} from "ethers";
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const filePath = hre.config.paths.deployments+"\\"+hre.network.name;
@@ -51,12 +52,12 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   //设定合约发布时reserveToken每天的质押奖励
   await vault.setStakeRewardRate(115);
   //approve给0x和1inch信用额度
-  await vault.setApprove(USDC_ADDRESS,0,MAX_UINT256.toString());
-  await vault.setApprove(USDT_ADDRESS,0,MAX_UINT256.toString());
-  await vault.setApprove(WSTETH_ADDRESS, 0, MAX_UINT256.toString());
-  await vault.setApprove(USDC_ADDRESS,1,MAX_UINT256.toString());
-  await vault.setApprove(USDT_ADDRESS,1,MAX_UINT256.toString());
-  await vault.setApprove(WSTETH_ADDRESS, 1, MAX_UINT256.toString());
+  await vault.setApprove(USDC_ADDRESS,0,BigNumber.from("10000000000"));
+  await vault.setApprove(USDT_ADDRESS,0,BigNumber.from("10000000000"));
+  await vault.setApprove(WSTETH_ADDRESS, 0, ethers.utils.parseEther("10"));
+  await vault.setApprove(USDC_ADDRESS,1,BigNumber.from("10000000000"));
+  await vault.setApprove(USDT_ADDRESS,1,BigNumber.from("10000000000"));
+  await vault.setApprove(WSTETH_ADDRESS, 1, ethers.utils.parseEther("10"));
   //aToken关联主合约
   await aToken.contact(vault.address);
   //bToken关联主合约

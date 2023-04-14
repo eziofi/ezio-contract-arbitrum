@@ -8,7 +8,6 @@ import {
 import {BigNumber, BytesLike, Contract} from "ethers";
 import {
   ERC20_ABI,
-  MAX_UINT256,
   ARBITRUM_TOKENS,
   MAINNET_TOKENS,
 } from "../../utils/constants";
@@ -35,7 +34,7 @@ describe("fork unit test",()=>{
   let aToken: USDEV1;
   let bToken: E2LPV1;
   let vault: EzVaultV1;
-  let getRedeemQuoteQty: Function;
+  let getRedeemQuoteQty: Function,getWithdrawQuoteQty: Function;
   beforeEach("Initialize contract",async ()=>{
     await hre.network.provider.request({
       method: "hardhat_reset",
@@ -87,12 +86,12 @@ describe("fork unit test",()=>{
     await vault.setAggregators(ethers.constants.AddressZero,"0xB1552C5e96B312d0Bf8b554186F846C40614a540");
     await vault.setStakeRewardRate(115);
     //approve 0x and 1inch
-    await vault.setApprove(USDC_ADDRESS,0,MAX_UINT256.toString());
-    await vault.setApprove(USDT_ADDRESS,0,MAX_UINT256.toString());
-    await vault.setApprove(WSTETH_ADDRESS, 0, MAX_UINT256.toString());
-    await vault.setApprove(USDC_ADDRESS,1,MAX_UINT256.toString());
-    await vault.setApprove(USDT_ADDRESS,1,MAX_UINT256.toString());
-    await vault.setApprove(WSTETH_ADDRESS, 1, MAX_UINT256.toString());
+    await vault.setApprove(USDC_ADDRESS,0,BigNumber.from("10000000000"));
+    await vault.setApprove(USDT_ADDRESS,0,BigNumber.from("10000000000"));
+    await vault.setApprove(WSTETH_ADDRESS, 0, ethers.utils.parseEther("10"));
+    await vault.setApprove(USDC_ADDRESS,1,BigNumber.from("10000000000"));
+    await vault.setApprove(USDT_ADDRESS,1,BigNumber.from("10000000000"));
+    await vault.setApprove(WSTETH_ADDRESS, 1, ethers.utils.parseEther("10"));
     //aToken contact vault
     await aToken.contact(vault.address);
     //bToken contact vault
@@ -117,6 +116,15 @@ describe("fork unit test",()=>{
           let leverage: BigNumber = await vault.leverage();
           quoteQty = redeemReserveQty.mul(leverage.sub(await vault.LEVERAGE_DENOMINATOR())).div(leverage);
         }
+      }
+      return quoteQty;
+    }
+    getWithdrawQuoteQty = async (amount: BigNumber)=>{
+      let balance = BigNumber.from(await usdc.balanceOf(vault.address));
+      let pooledA = await vault.pooledA();
+      let quoteQty: BigNumber = BigNumber.from("0");
+      if(amount.add(pooledA)>balance){
+        quoteQty = amount.mul(BigNumber.from("10").pow("18")).div(await vault.getPrice(WSTETH_ADDRESS));
       }
       return quoteQty;
     }
@@ -305,6 +313,50 @@ describe("fork unit test",()=>{
     console.log("-----------vault totalNetWorth=",await vault.totalNetWorth());
     console.log("-----------leverage=",await vault.leverage());
     console.log("-----------interestRate=",await vault.interestRate());
+    console.log("================================================");
+  });
+  it("withdraw test",async ()=>{
+    let quoteResponse1 = genNotSwapData(BigNumber.from("4000000000"))
+    let quotes1 = [quoteResponse1];
+    await vault.connect(usdcTaker).purchase(0,0,quotes1);
+    let quotes3: BytesLike[];
+    let quoteParams3: ZeroExQuoteParams = {
+      sellToken: USDC_ADDRESS,
+      buyToken: WSTETH_ADDRESS,
+      sellAmount: "3000000000",
+      slippagePercentage: "0.01"
+    }
+    let quoteResponse3 = await getZeroExQuoteResponse(quoteParams3);
+    let quoteParams4: ZeroExQuoteParams = {
+      sellToken: USDC_ADDRESS,
+      buyToken: WSTETH_ADDRESS,
+      sellAmount: "3000000000",
+      slippagePercentage: "0.01"
+    }
+    let quoteResponse4 = await getZeroExQuoteResponse(quoteParams4);
+    quotes3 = [quoteResponse3,quoteResponse4];
+    await vault.connect(usdcTaker).purchase(1,0,quotes3);
+
+    let redeemAmount1 = ethers.utils.parseEther("2000");
+    let convertSellAmount1 = await getRedeemQuoteQty(0,redeemAmount1,USDC_ADDRESS);
+    let quoteParams5: ZeroExQuoteParams = {
+      sellToken: WSTETH_ADDRESS,
+      buyToken: USDC_ADDRESS,
+      sellAmount: convertSellAmount1.toString(),
+      slippagePercentage: "0.01"
+    }
+    let quoteResponse5 = await getZeroExQuoteResponse(quoteParams5);
+    await vault.connect(usdcTaker).redeem(0,0,redeemAmount1,USDC_ADDRESS,quoteResponse5);
+
+    console.log("-----------signer usdc balance=",await usdc.balanceOf(signer.address));
+    console.log("-----------totalCommission=",await vault.totalCommission());
+    console.log("================================================");
+
+    let withdrawAmount = BigNumber.from("500000");
+    let quoteResponse7 = await genNotSwapData(withdrawAmount);
+    await vault.connect(signer).withdraw(withdrawAmount,0,quoteResponse7);
+    console.log("-----------signer usdc balance=",await usdc.balanceOf(signer.address));
+    console.log("-----------totalCommission=",await vault.totalCommission());
     console.log("================================================");
   });
 });

@@ -8,7 +8,6 @@ import {
 import {BigNumber, BytesLike, Contract} from "ethers";
 import {
   ERC20_ABI,
-  MAX_UINT256,
   ARBITRUM_TOKENS,
   MAINNET_TOKENS,
 } from "../../utils/constants";
@@ -79,12 +78,12 @@ describe("fork integration test",()=>{
     await vault.setAggregators(ethers.constants.AddressZero,"0xB1552C5e96B312d0Bf8b554186F846C40614a540");
     await vault.setStakeRewardRate(115);
     //approve 0x and 1inch
-    await vault.setApprove(USDC_ADDRESS,0,MAX_UINT256.toString());
-    await vault.setApprove(USDT_ADDRESS,0,MAX_UINT256.toString());
-    await vault.setApprove(WSTETH_ADDRESS, 0, MAX_UINT256.toString());
-    await vault.setApprove(USDC_ADDRESS,1,MAX_UINT256.toString());
-    await vault.setApprove(USDT_ADDRESS,1,MAX_UINT256.toString());
-    await vault.setApprove(WSTETH_ADDRESS, 1, MAX_UINT256.toString());
+    await vault.setApprove(USDC_ADDRESS,0,BigNumber.from("10000000000"));
+    await vault.setApprove(USDT_ADDRESS,0,BigNumber.from("10000000000"));
+    await vault.setApprove(WSTETH_ADDRESS, 0, ethers.utils.parseEther("10"));
+    await vault.setApprove(USDC_ADDRESS,1,BigNumber.from("10000000000"));
+    await vault.setApprove(USDT_ADDRESS,1,BigNumber.from("10000000000"));
+    await vault.setApprove(WSTETH_ADDRESS, 1, ethers.utils.parseEther("10"));
     //aToken contact vault
     await aToken.contact(vault.address);
     //bToken contact vault
