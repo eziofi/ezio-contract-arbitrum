@@ -12,7 +12,7 @@ import {
   ARBITRUM_TOKENS,
   MAINNET_TOKENS,
 } from "../../utils/constants";
-import {genNoSwapData, getZeroExQuoteResponse, ZeroExQuoteParams} from "../../utils/swap";
+import {genNotSwapData, getZeroExQuoteResponse, ZeroExQuoteParams} from "../../utils/swap";
 import { firstRebaseTime } from "../../utils/date";
 const hre = require("hardhat");
 
@@ -22,7 +22,7 @@ const WSTETH_ADDRESS = ARBITRUM_TOKENS.wstETH;
 const USDC_TAKER_ADDRESS = process.env.ARBITRUM_USDC_TAKER_ADDRESS || '';
 const USDT_TAKER_ADDRESS = process.env.ARBITRUM_USDT_TAKER_ADDRESS || '';
 
-describe("fork test",()=>{
+describe("fork integration test",()=>{
   let signer: SignerWithAddress, usdtTaker: SignerWithAddress, usdcTaker: SignerWithAddress;
   let usdc: Contract,usdt: Contract,wstETH: Contract;
   let aToken: USDEV1;
@@ -95,7 +95,7 @@ describe("fork test",()=>{
     console.log("---------USDT price",await vault.getPrice(USDT_ADDRESS));
     console.log("---------WSTETH price",await vault.getPrice(WSTETH_ADDRESS));
     //USDCTaker use 4000USDC to purchases aToken
-    let quoteResponse2 = genNoSwapData(BigNumber.from("4000000000"))
+    let quoteResponse2 = genNotSwapData(BigNumber.from("4000000000"))
     let quotes2 = [quoteResponse2];
     await vault.connect(usdcTaker).purchase(0,0,quotes2);
 

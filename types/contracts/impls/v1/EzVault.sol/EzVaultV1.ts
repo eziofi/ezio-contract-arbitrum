@@ -56,6 +56,7 @@ export interface EzVaultV1Interface extends utils.Interface {
     "lastRebaseTime()": FunctionFragment;
     "leverage()": FunctionFragment;
     "matchedA()": FunctionFragment;
+    "parseQuoteData(uint8,bytes)": FunctionFragment;
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
     "pooledA()": FunctionFragment;
@@ -112,6 +113,7 @@ export interface EzVaultV1Interface extends utils.Interface {
       | "lastRebaseTime"
       | "leverage"
       | "matchedA"
+      | "parseQuoteData"
       | "pause"
       | "paused"
       | "pooledA"
@@ -251,6 +253,10 @@ export interface EzVaultV1Interface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "leverage", values?: undefined): string;
   encodeFunctionData(functionFragment: "matchedA", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "parseQuoteData",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>]
+  ): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(functionFragment: "pooledA", values?: undefined): string;
@@ -436,6 +442,10 @@ export interface EzVaultV1Interface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "leverage", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "matchedA", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "parseQuoteData",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pooledA", data: BytesLike): Result;
@@ -767,6 +777,18 @@ export interface EzVaultV1 extends BaseContract {
 
     matchedA(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    parseQuoteData(
+      channel: PromiseOrValue<BigNumberish>,
+      quote: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, BigNumber] & {
+        sellToken: string;
+        buyToken: string;
+        sellAmount: BigNumber;
+      }
+    >;
+
     pause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -979,6 +1001,18 @@ export interface EzVaultV1 extends BaseContract {
 
   matchedA(overrides?: CallOverrides): Promise<BigNumber>;
 
+  parseQuoteData(
+    channel: PromiseOrValue<BigNumberish>,
+    quote: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<
+    [string, string, BigNumber] & {
+      sellToken: string;
+      buyToken: string;
+      sellAmount: BigNumber;
+    }
+  >;
+
   pause(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -1190,6 +1224,18 @@ export interface EzVaultV1 extends BaseContract {
     leverage(overrides?: CallOverrides): Promise<BigNumber>;
 
     matchedA(overrides?: CallOverrides): Promise<BigNumber>;
+
+    parseQuoteData(
+      channel: PromiseOrValue<BigNumberish>,
+      quote: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, BigNumber] & {
+        sellToken: string;
+        buyToken: string;
+        sellAmount: BigNumber;
+      }
+    >;
 
     pause(overrides?: CallOverrides): Promise<void>;
 
@@ -1496,6 +1542,12 @@ export interface EzVaultV1 extends BaseContract {
 
     matchedA(overrides?: CallOverrides): Promise<BigNumber>;
 
+    parseQuoteData(
+      channel: PromiseOrValue<BigNumberish>,
+      quote: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     pause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -1722,6 +1774,12 @@ export interface EzVaultV1 extends BaseContract {
     leverage(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     matchedA(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    parseQuoteData(
+      channel: PromiseOrValue<BigNumberish>,
+      quote: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     pause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }

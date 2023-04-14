@@ -12,7 +12,13 @@ import {
   ARBITRUM_TOKENS,
   MAINNET_TOKENS,
 } from "../../utils/constants";
-import { genNoSwapData, getZeroExQuoteResponse, ZeroExQuoteParams } from "../../utils/swap";
+import {
+  genNotSwapData,
+  getOneInchQuoteResponse,
+  getZeroExQuoteResponse,
+  OneInchQuoteParams,
+  ZeroExQuoteParams
+} from "../../utils/swap";
 import { firstRebaseTime } from "../../utils/date";
 import { expect } from "chai";
 const hre = require("hardhat");
@@ -116,6 +122,15 @@ describe("fork unit test",()=>{
     }
   });
 
+  it("parseQuoteData test",async ()=>{
+    let quoteResponse = genNotSwapData(BigNumber.from("1000000000"));
+    let sellToken: string, buyToken: string, sellAmount: BigNumber;
+    [sellToken,buyToken,sellAmount] = await vault.parseQuoteData(0,quoteResponse);
+    expect(sellToken.toLowerCase()).to.equal(ARBITRUM_TOKENS.USDC.toLowerCase());
+    expect(buyToken.toLowerCase()).to.equal(ethers.constants.AddressZero.toLowerCase());
+    expect(sellAmount).to.equal(BigNumber.from("1000000000"));
+  });
+
   it("pause EzVault test",async ()=>{
     await vault.pause();
     await expect(vault.rebase()).to.be.revertedWith("Pausable: paused");
@@ -123,7 +138,7 @@ describe("fork unit test",()=>{
 
   it("pause USDE test",async ()=>{
     await aToken.pause();
-    let quoteResponse = genNoSwapData(BigNumber.from("1000000000"))
+    let quoteResponse = genNotSwapData(BigNumber.from("1000000000"))
     let quotes = [quoteResponse];
     await expect(vault.connect(usdcTaker).purchase(0,0,quotes)).to.be.revertedWith("Pausable: paused");
   });
@@ -133,7 +148,7 @@ describe("fork unit test",()=>{
   });
 
   it("purchase USDE using USDC",async ()=>{
-    let quoteResponse1 = genNoSwapData(BigNumber.from("1000000000"))
+    let quoteResponse1 = genNotSwapData(BigNumber.from("1000000000"))
     let quotes1 = [quoteResponse1];
     await vault.connect(usdcTaker).purchase(0,0,quotes1);
     console.log("-----------vault usdc balance=",await usdc.balanceOf(vault.address));
@@ -172,7 +187,7 @@ describe("fork unit test",()=>{
   });
 
   it("purchase E2LP using USDC with enough pooled funds",async ()=>{
-    let quoteResponse1 = genNoSwapData(BigNumber.from("4000000000"))
+    let quoteResponse1 = genNotSwapData(BigNumber.from("4000000000"))
     let quotes1 = [quoteResponse1];
     await vault.connect(usdcTaker).purchase(0,0,quotes1);
     let quotes3: BytesLike[];
@@ -205,11 +220,11 @@ describe("fork unit test",()=>{
     console.log("================================================");
   });
   it("redeem USDE test with enough USDC",async ()=>{
-    let quoteResponse = genNoSwapData(BigNumber.from("1000000000"))
+    let quoteResponse = genNotSwapData(BigNumber.from("1000000000"))
     let quotes = [quoteResponse];
     await vault.connect(usdcTaker).purchase(0,0,quotes);
     let redeemAmount1 = ethers.utils.parseEther("500");
-    let quoteResponse5 = genNoSwapData(BigNumber.from("1000000000"));
+    let quoteResponse5 = genNotSwapData(BigNumber.from("1000000000"));
     await vault.connect(usdcTaker).redeem(0,0,redeemAmount1,USDC_ADDRESS,quoteResponse5);
     console.log("-----------vault usdc balance=",await usdc.balanceOf(vault.address));
     console.log("-----------vault wstETH balance",await wstETH.balanceOf(vault.address));
@@ -225,7 +240,7 @@ describe("fork unit test",()=>{
   });
 
   it("redeem USDE test without enough USDC",async ()=>{
-    let quoteResponse1 = genNoSwapData(BigNumber.from("4000000000"))
+    let quoteResponse1 = genNotSwapData(BigNumber.from("4000000000"))
     let quotes1 = [quoteResponse1];
     await vault.connect(usdcTaker).purchase(0,0,quotes1);
     let quotes3: BytesLike[];
@@ -256,6 +271,30 @@ describe("fork unit test",()=>{
     }
     let quoteResponse5 = await getZeroExQuoteResponse(quoteParams5);
     await vault.connect(usdcTaker).redeem(0,0,redeemAmount1,USDC_ADDRESS,quoteResponse5);
+    console.log("-----------vault usdc balance=",await usdc.balanceOf(vault.address));
+    console.log("-----------vault wstETH balance",await wstETH.balanceOf(vault.address));
+    console.log("-----------usdcTaker aToken=",await aToken.balanceOf(usdcTaker.address));
+    console.log("-----------usdcTaker bToken=",await bToken.balanceOf(usdcTaker.address));
+    console.log("-----------vault pooledA=",await vault.pooledA());
+    console.log("-----------vault matchedA=",await vault.matchedA());
+    console.log("-----------vault totalReserve=",await vault.totalReserve());
+    console.log("-----------vault totalNetWorth=",await vault.totalNetWorth());
+    console.log("-----------leverage=",await vault.leverage());
+    console.log("-----------interestRate=",await vault.interestRate());
+    console.log("================================================");
+  });
+  it("purchase E2LP using 1inch channel",async ()=>{
+    let quoteParams6: OneInchQuoteParams = {
+      fromTokenAddress: USDC_ADDRESS,
+      toTokenAddress: WSTETH_ADDRESS,
+      amount: "2000000000",
+      fromAddress: vault.address,
+      disableEstimate: true,
+      slippage: 1
+    }
+    let quoteResponse6 = await getOneInchQuoteResponse(quoteParams6);
+    let quotes6 = [quoteResponse6];
+    await vault.connect(usdcTaker).purchase(1,1,quotes6);
     console.log("-----------vault usdc balance=",await usdc.balanceOf(vault.address));
     console.log("-----------vault wstETH balance",await wstETH.balanceOf(vault.address));
     console.log("-----------usdcTaker aToken=",await aToken.balanceOf(usdcTaker.address));
