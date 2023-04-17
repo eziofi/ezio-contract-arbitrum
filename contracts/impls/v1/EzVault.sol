@@ -11,7 +11,7 @@ import "../../impls/v1/E2LP.sol";
 import "../../impls/v1/Conversion.sol";
 import "../../impls/v1/SwapCollector.sol";
 import "../../interfaces/v1/IEzVault.sol";
-import "hardhat/console.sol";
+//import "hardhat/console.sol";
 
 contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeable,ConversionUpgradeable,SwapCollectorUpgradeable,IEzVault{
   struct ChangeData{
@@ -217,7 +217,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeab
       totalCommission += commission;
       //Sending USDC
       stableToken.safeTransfer(msg.sender, amt - commission);
-      emit Redeem(msg.sender,type_,qty_,amt,commission,aToken.totalNetWorth(),aToken.totalShare());
+      emit Redeem(msg.sender,type_,qty_,amt,commission,aToken.totalNetWorth(),aToken.totalSupply());
     }else if(type_ == TYPE.B){
       uint256 amt = qty_ * bToken.netWorth() / 1e18;
       if(token_==address(stableToken)){

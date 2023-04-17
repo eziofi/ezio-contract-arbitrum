@@ -45,9 +45,7 @@ describe("contract connect test in arbitrum network", function () {
     console.log("-----------signer bToken balance=",await bToken.balanceOf(signer.address));
     console.log("-----------vault usdc=",await usdc.balanceOf(vault.address));
     console.log("-----------vault wstETH=",await wstETH.balanceOf(vault.address));
-    console.log("-----------aToken shareNetWorth=",await aToken.shareNetWorth());
     console.log("-----------aToken totalNetWorth=",await aToken.totalNetWorth());
-    console.log("-----------aToken totalShare=",await aToken.totalShare());
     console.log("-----------aToken totalSupply=",await aToken.totalSupply());
     console.log("-----------bToken totalSupply=",await bToken.totalSupply());
     console.log("-----------bToken totalNetWorth=",await bToken.totalNetWorth());

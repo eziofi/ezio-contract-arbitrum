@@ -54,11 +54,9 @@ export interface USDEV1Interface extends utils.Interface {
     "paused()": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
-    "shareNetWorth()": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalNetWorth()": FunctionFragment;
-    "totalShare()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
@@ -93,11 +91,9 @@ export interface USDEV1Interface extends utils.Interface {
       | "paused"
       | "renounceRole"
       | "revokeRole"
-      | "shareNetWorth"
       | "supportsInterface"
       | "symbol"
       | "totalNetWorth"
-      | "totalShare"
       | "totalSupply"
       | "transfer"
       | "transferFrom"
@@ -191,20 +187,12 @@ export interface USDEV1Interface extends utils.Interface {
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "shareNetWorth",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "totalNetWorth",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "totalShare",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -282,10 +270,6 @@ export interface USDEV1Interface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "shareNetWorth",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
@@ -294,7 +278,6 @@ export interface USDEV1Interface extends utils.Interface {
     functionFragment: "totalNetWorth",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "totalShare", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
     data: BytesLike
@@ -549,8 +532,6 @@ export interface USDEV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    shareNetWorth(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -559,8 +540,6 @@ export interface USDEV1 extends BaseContract {
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
     totalNetWorth(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    totalShare(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -696,8 +675,6 @@ export interface USDEV1 extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  shareNetWorth(overrides?: CallOverrides): Promise<BigNumber>;
-
   supportsInterface(
     interfaceId: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
@@ -706,8 +683,6 @@ export interface USDEV1 extends BaseContract {
   symbol(overrides?: CallOverrides): Promise<string>;
 
   totalNetWorth(overrides?: CallOverrides): Promise<BigNumber>;
-
-  totalShare(overrides?: CallOverrides): Promise<BigNumber>;
 
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -841,8 +816,6 @@ export interface USDEV1 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    shareNetWorth(overrides?: CallOverrides): Promise<BigNumber>;
-
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -851,8 +824,6 @@ export interface USDEV1 extends BaseContract {
     symbol(overrides?: CallOverrides): Promise<string>;
 
     totalNetWorth(overrides?: CallOverrides): Promise<BigNumber>;
-
-    totalShare(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1053,8 +1024,6 @@ export interface USDEV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    shareNetWorth(overrides?: CallOverrides): Promise<BigNumber>;
-
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -1063,8 +1032,6 @@ export interface USDEV1 extends BaseContract {
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalNetWorth(overrides?: CallOverrides): Promise<BigNumber>;
-
-    totalShare(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1203,8 +1170,6 @@ export interface USDEV1 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    shareNetWorth(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -1213,8 +1178,6 @@ export interface USDEV1 extends BaseContract {
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     totalNetWorth(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    totalShare(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
