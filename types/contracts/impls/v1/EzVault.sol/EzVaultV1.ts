@@ -27,6 +27,27 @@ import type {
   PromiseOrValue,
 } from "../../../../common";
 
+export declare namespace SwapCollectorUpgradeable {
+  export type ParsedQuoteDataStruct = {
+    sellToken: PromiseOrValue<string>;
+    buyToken: PromiseOrValue<string>;
+    sellAmount: PromiseOrValue<BigNumberish>;
+    buyAmount: PromiseOrValue<BigNumberish>;
+  };
+
+  export type ParsedQuoteDataStructOutput = [
+    string,
+    string,
+    BigNumber,
+    BigNumber
+  ] & {
+    sellToken: string;
+    buyToken: string;
+    sellAmount: BigNumber;
+    buyAmount: BigNumber;
+  };
+}
+
 export interface EzVaultV1Interface extends utils.Interface {
   functions: {
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
@@ -782,10 +803,8 @@ export interface EzVaultV1 extends BaseContract {
       quote: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, BigNumber] & {
-        sellToken: string;
-        buyToken: string;
-        sellAmount: BigNumber;
+      [SwapCollectorUpgradeable.ParsedQuoteDataStructOutput] & {
+        parsedQuoteData: SwapCollectorUpgradeable.ParsedQuoteDataStructOutput;
       }
     >;
 
@@ -1005,13 +1024,7 @@ export interface EzVaultV1 extends BaseContract {
     channel: PromiseOrValue<BigNumberish>,
     quote: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
-  ): Promise<
-    [string, string, BigNumber] & {
-      sellToken: string;
-      buyToken: string;
-      sellAmount: BigNumber;
-    }
-  >;
+  ): Promise<SwapCollectorUpgradeable.ParsedQuoteDataStructOutput>;
 
   pause(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1229,13 +1242,7 @@ export interface EzVaultV1 extends BaseContract {
       channel: PromiseOrValue<BigNumberish>,
       quote: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<
-      [string, string, BigNumber] & {
-        sellToken: string;
-        buyToken: string;
-        sellAmount: BigNumber;
-      }
-    >;
+    ): Promise<SwapCollectorUpgradeable.ParsedQuoteDataStructOutput>;
 
     pause(overrides?: CallOverrides): Promise<void>;
 

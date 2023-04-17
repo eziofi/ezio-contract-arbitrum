@@ -56,7 +56,6 @@ contract ConversionUpgradeable is Initializable,AccessControlEnumerableUpgradeab
   * @return uint256
   */
   function getPrice(address tokenAddress) public view returns(uint256){
-    uint256 stable_coin_usd = aggregatorAction(address(stableToken));
     uint256 token_usd;
     if(tokenAddress==WSTETH_ADDRESS){
       uint256 steth_usd = aggregatorAction(STETH_ADDRESS);
@@ -64,7 +63,7 @@ contract ConversionUpgradeable is Initializable,AccessControlEnumerableUpgradeab
     }else{
       token_usd = aggregatorAction(tokenAddress);
     }
-    return token_usd * 1e6 / stable_coin_usd;
+    return token_usd * 1e6 / aggregatorAction(address(stableToken));
   }
 
   /**
@@ -75,8 +74,7 @@ contract ConversionUpgradeable is Initializable,AccessControlEnumerableUpgradeab
     AggregatorV3Interface priceFeed = AggregatorV3Interface(tokenAggregators[tokenAddress]);
     (,int256 answer,,,) = priceFeed.latestRoundData();
     require(answer>=0,PRICE_FEED_ERROR);
-    uint256 rate = uint256(answer);
-    return rate;
+    return uint256(answer);
   }
 
   /**

@@ -8,6 +8,12 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 //import "hardhat/console.sol";
 
 contract SwapCollectorUpgradeable is Initializable{
+  struct ParsedQuoteData {
+    address sellToken;
+    address buyToken;
+    uint256 sellAmount;
+    uint256 buyAmount;
+  }
   using SafeERC20Upgradeable for IERC20MetadataUpgradeable;
   bytes4 internal constant SWAP_SELECTOR = 0x36e57cb7;   //bytes4(keccak256("notSwap(address,address,uint256)"))
   //0x Switching Router
@@ -45,15 +51,27 @@ contract SwapCollectorUpgradeable is Initializable{
     }
   }
 
-  function parseQuoteData(uint8 channel,bytes calldata quote) public pure returns (address sellToken, address buyToken, uint256 sellAmount){
+  function parseQuoteData(uint8 channel,bytes calldata quote) public pure returns (ParsedQuoteData memory parsedQuoteData){
     bytes4 selector = _bytesToBytes4(quote[:4]);
     if(selector==SWAP_SELECTOR){
-      (sellToken, buyToken, sellAmount) = abi.decode(quote[4:],(address,address,uint256));
+      (address sellToken,address buyToken, uint256 sellAmount) = abi.decode(quote[4:],(address,address,uint256));
+      parsedQuoteData.sellToken = sellToken;
+      parsedQuoteData.buyToken = buyToken;
+      parsedQuoteData.sellAmount = sellAmount;
+      parsedQuoteData.buyAmount = 0;
     }else{
       if(channel==0){
-        (sellToken, buyToken, sellAmount) = _parseZeroExData(quote);
+        (address sellToken, address buyToken, uint256 sellAmount,uint256 buyAmount) = _parseZeroExData(quote);
+        parsedQuoteData.sellToken = sellToken;
+        parsedQuoteData.buyToken = buyToken;
+        parsedQuoteData.sellAmount = sellAmount;
+        parsedQuoteData.buyAmount = buyAmount;
       }else if(channel==1){
-        (sellToken, buyToken, sellAmount) = _parseOneInchData(quote);
+        (address sellToken, address buyToken, uint256 sellAmount,uint256 buyAmount) = _parseOneInchData(quote);
+        parsedQuoteData.sellToken = sellToken;
+        parsedQuoteData.buyToken = buyToken;
+        parsedQuoteData.sellAmount = sellAmount;
+        parsedQuoteData.buyAmount = buyAmount;
       }else{
         revert("SwapCollector: Wrong Parameter");
       }
@@ -71,10 +89,10 @@ contract SwapCollectorUpgradeable is Initializable{
     return buyAmount;
   }
 
-  function _parseZeroExData(bytes calldata data) internal pure returns (address sellToken, address buyToken, uint256 sellAmount){
+  function _parseZeroExData(bytes calldata data) internal pure returns (address sellToken, address buyToken, uint256 sellAmount,uint256 buyAmount){
     bytes4 selector = _bytesToBytes4(data[:4]);
     require(selector==ZEROEX_SWAP_SELECTOR,WRONG_FUNC_CALL);
-    (sellToken, buyToken, sellAmount) = abi.decode(data[4:],(address,address,uint256));
+    (sellToken, buyToken, sellAmount,buyAmount) = abi.decode(data[4:],(address,address,uint256,uint256));
   }
 
   /**
@@ -88,10 +106,10 @@ contract SwapCollectorUpgradeable is Initializable{
     return buyAmount;
   }
 
-  function _parseOneInchData(bytes calldata data) internal pure returns (address sellToken, address buyToken, uint256 sellAmount){
+  function _parseOneInchData(bytes calldata data) internal pure returns (address sellToken, address buyToken, uint256 sellAmount,uint256 buyAmount){
     bytes4 selector = _bytesToBytes4(data[:4]);
     require(selector==ONEINCH_SWAP_SELECTOR,WRONG_FUNC_CALL);
-    (,sellToken,buyToken,,,sellAmount) = abi.decode(data[4:],(address,address,address,address,address,uint256));
+    (,sellToken,buyToken,,,sellAmount,buyAmount) = abi.decode(data[4:],(address,address,address,address,address,uint256,uint256));
   }
 
   function _bytesToBytes4(bytes memory input) internal pure returns(bytes4 output){

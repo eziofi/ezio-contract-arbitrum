@@ -25,6 +25,27 @@ import type {
   PromiseOrValue,
 } from "../../../../common";
 
+export declare namespace SwapCollectorUpgradeable {
+  export type ParsedQuoteDataStruct = {
+    sellToken: PromiseOrValue<string>;
+    buyToken: PromiseOrValue<string>;
+    sellAmount: PromiseOrValue<BigNumberish>;
+    buyAmount: PromiseOrValue<BigNumberish>;
+  };
+
+  export type ParsedQuoteDataStructOutput = [
+    string,
+    string,
+    BigNumber,
+    BigNumber
+  ] & {
+    sellToken: string;
+    buyToken: string;
+    sellAmount: BigNumber;
+    buyAmount: BigNumber;
+  };
+}
+
 export interface SwapCollectorUpgradeableInterface extends utils.Interface {
   functions: {
     "parseQuoteData(uint8,bytes)": FunctionFragment;
@@ -88,10 +109,8 @@ export interface SwapCollectorUpgradeable extends BaseContract {
       quote: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, BigNumber] & {
-        sellToken: string;
-        buyToken: string;
-        sellAmount: BigNumber;
+      [SwapCollectorUpgradeable.ParsedQuoteDataStructOutput] & {
+        parsedQuoteData: SwapCollectorUpgradeable.ParsedQuoteDataStructOutput;
       }
     >;
   };
@@ -100,26 +119,14 @@ export interface SwapCollectorUpgradeable extends BaseContract {
     channel: PromiseOrValue<BigNumberish>,
     quote: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
-  ): Promise<
-    [string, string, BigNumber] & {
-      sellToken: string;
-      buyToken: string;
-      sellAmount: BigNumber;
-    }
-  >;
+  ): Promise<SwapCollectorUpgradeable.ParsedQuoteDataStructOutput>;
 
   callStatic: {
     parseQuoteData(
       channel: PromiseOrValue<BigNumberish>,
       quote: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<
-      [string, string, BigNumber] & {
-        sellToken: string;
-        buyToken: string;
-        sellAmount: BigNumber;
-      }
-    >;
+    ): Promise<SwapCollectorUpgradeable.ParsedQuoteDataStructOutput>;
   };
 
   filters: {
