@@ -121,7 +121,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeab
       }else{
         //Trade with an exchange for STABLE_COIN
         require(parsedQuoteData.buyToken==address(stableToken),WRONG_BUY_TOKEN);
-        uint256 minBuyAmount = convertAmt(parsedQuoteData.sellToken,parsedQuoteData.buyToken,parsedQuoteData.sellAmount) * 98 /100;
+        uint256 minBuyAmount = convertAmt(parsedQuoteData.sellToken,parsedQuoteData.buyToken,parsedQuoteData.sellAmount) * 90 /100;
         require(parsedQuoteData.buyAmount>=minBuyAmount,WRONG_AMOUNT);
         stableAmount = _swap(channel_,quotes_[0],parsedQuoteData.sellToken,parsedQuoteData.sellAmount);
       }
@@ -140,7 +140,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeab
       }else{
         //The amount convert
         stableAmount = convertAmt(parsedQuoteData.sellToken,address(stableToken),parsedQuoteData.sellAmount);
-        require(parsedQuoteData.buyAmount>=stableAmount * 98 /100,WRONG_AMOUNT);
+        require(parsedQuoteData.buyAmount>=stableAmount * 90 /100,WRONG_AMOUNT);
       }
       require(stableAmount>0,WRONG_AMOUNT);
       //console.log("stableAmount=",stableAmount);
@@ -167,7 +167,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeab
       require(parsedQuoteDataExt.buyToken==address(reserveToken),WRONG_BUY_TOKEN);
       require(parsedQuoteDataExt.sellToken==address(stableToken),WRONG_SELL_TOKEN);
       require(parsedQuoteDataExt.sellAmount == stableAmountExt,WRONG_AMOUNT);
-      uint256 minBuyAmount = convertAmt(parsedQuoteData.sellToken,parsedQuoteData.buyToken,parsedQuoteData.sellAmount) * 98 /100;
+      uint256 minBuyAmount = convertAmt(parsedQuoteData.sellToken,parsedQuoteData.buyToken,parsedQuoteData.sellAmount) * 90 /100;
       require(parsedQuoteData.buyAmount>=minBuyAmount,WRONG_AMOUNT);
       pooledA -= stableAmountExt;
       matchedA += stableAmountExt;
@@ -203,7 +203,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeab
         require(parsedQuoteData.sellToken==address(reserveToken),WRONG_SELL_TOKEN);
         require(parsedQuoteData.buyToken==address(stableToken),WRONG_BUY_TOKEN);
         require(parsedQuoteData.sellAmount==saleQty,WRONG_AMOUNT);
-        uint256 minBuyAmount = convertAmt(parsedQuoteData.sellToken,parsedQuoteData.buyToken,parsedQuoteData.sellAmount) * 98 /100;
+        uint256 minBuyAmount = convertAmt(parsedQuoteData.sellToken,parsedQuoteData.buyToken,parsedQuoteData.sellAmount) * 90 /100;
         require(parsedQuoteData.buyAmount>=minBuyAmount,WRONG_AMOUNT);
         _swap(channel_,quote_,parsedQuoteData.sellToken,parsedQuoteData.sellAmount);
         //burn aToken
@@ -227,7 +227,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeab
         require(parsedQuoteData.sellToken==address(reserveToken),WRONG_SELL_TOKEN);
         require(parsedQuoteData.buyToken==address(stableToken),WRONG_BUY_TOKEN);
         require(parsedQuoteData.sellAmount==saleAmount,WRONG_AMOUNT);
-        uint256 minBuyAmount = convertAmt(parsedQuoteData.sellToken,parsedQuoteData.buyToken,parsedQuoteData.sellAmount) * 98 /100;
+        uint256 minBuyAmount = convertAmt(parsedQuoteData.sellToken,parsedQuoteData.buyToken,parsedQuoteData.sellAmount) * 90 /100;
         require(parsedQuoteData.buyAmount>=minBuyAmount,WRONG_AMOUNT);
         _swap(channel_,quote_,parsedQuoteData.sellToken,parsedQuoteData.sellAmount);
         //Burn bToken
@@ -251,7 +251,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeab
           require(parsedQuoteData.sellToken==address(reserveToken),WRONG_SELL_TOKEN);
           require(parsedQuoteData.buyToken==address(stableToken),WRONG_BUY_TOKEN);
           require(parsedQuoteData.sellAmount==saleQty,WRONG_AMOUNT);
-          uint256 minBuyAmount = convertAmt(parsedQuoteData.sellToken,parsedQuoteData.buyToken,parsedQuoteData.sellAmount) * 98 /100;
+          uint256 minBuyAmount = convertAmt(parsedQuoteData.sellToken,parsedQuoteData.buyToken,parsedQuoteData.sellAmount) * 90 /100;
           require(parsedQuoteData.buyAmount>=minBuyAmount,WRONG_AMOUNT);
           _swap(channel_,quote_,parsedQuoteData.sellToken,parsedQuoteData.sellAmount);
           pooledA += saleAmount;
@@ -337,7 +337,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeab
     require(parsedQuoteData.buyToken==address(stableToken),WRONG_BUY_TOKEN);
     require(totalReserve / 4  == parsedQuoteData.sellAmount,WRONG_PARAMETER);
     uint256 buyAmount = parsedQuoteData.sellAmount * getPrice(address(reserveToken)) / 1e18;
-    require(parsedQuoteData.buyAmount>=buyAmount * 98 /100,WRONG_AMOUNT);
+    require(parsedQuoteData.buyAmount>=buyAmount * 90 /100,WRONG_AMOUNT);
     //console.log("buyAmount=",buyAmount);
     totalReserve -= parsedQuoteData.sellAmount;
     matchedA -= buyAmount;
@@ -419,7 +419,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeab
       require(parsedQuoteData.sellToken==address(reserveToken),WRONG_SELL_TOKEN);
       require(parsedQuoteData.buyToken==address(stableToken),WRONG_BUY_TOKEN);
       require(parsedQuoteData.sellAmount == amount * 1e18 / getPrice(address(reserveToken)),WRONG_AMOUNT);
-      uint256 minBuyAmount = convertAmt(parsedQuoteData.sellToken,parsedQuoteData.buyToken,parsedQuoteData.sellAmount) * 98 /100;
+      uint256 minBuyAmount = convertAmt(parsedQuoteData.sellToken,parsedQuoteData.buyToken,parsedQuoteData.sellAmount) * 90 /100;
       require(parsedQuoteData.buyAmount>=minBuyAmount,WRONG_AMOUNT);
       receiveAmount = _swap(channel_,quote_,parsedQuoteData.sellToken,parsedQuoteData.sellAmount);
     }
