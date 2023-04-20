@@ -131,7 +131,7 @@ describe("fork unit test",()=>{
   });
 
   it("parseQuoteData test",async ()=>{
-    let quoteResponse = genNotSwapData(BigNumber.from("1000000000"));
+    let quoteResponse = genNotSwapData(ARBITRUM_TOKENS.USDC,BigNumber.from("1000000000"));
     let sellToken: string, buyToken: string, sellAmount: BigNumber;
     [sellToken,buyToken,sellAmount] = await vault.parseQuoteData(0,quoteResponse);
     expect(sellToken.toLowerCase()).to.equal(ARBITRUM_TOKENS.USDC.toLowerCase());
@@ -146,7 +146,7 @@ describe("fork unit test",()=>{
 
   it("pause USDE test",async ()=>{
     await aToken.pause();
-    let quoteResponse = genNotSwapData(BigNumber.from("1000000000"))
+    let quoteResponse = genNotSwapData(ARBITRUM_TOKENS.USDC,BigNumber.from("1000000000"))
     let quotes = [quoteResponse];
     await expect(vault.connect(usdcTaker).purchase(0,0,quotes)).to.be.revertedWith("Pausable: paused");
   });
@@ -156,7 +156,7 @@ describe("fork unit test",()=>{
   });
 
   it("purchase USDE using USDC",async ()=>{
-    let quoteResponse1 = genNotSwapData(BigNumber.from("1000000000"))
+    let quoteResponse1 = genNotSwapData(ARBITRUM_TOKENS.USDC,BigNumber.from("1000000000"))
     let quotes1 = [quoteResponse1];
     await vault.connect(usdcTaker).purchase(0,0,quotes1);
     console.log("-----------vault usdc balance=",await usdc.balanceOf(vault.address));
@@ -195,7 +195,7 @@ describe("fork unit test",()=>{
   });
 
   it("purchase E2LP using USDC with enough pooled funds",async ()=>{
-    let quoteResponse1 = genNotSwapData(BigNumber.from("4000000000"))
+    let quoteResponse1 = genNotSwapData(ARBITRUM_TOKENS.USDC,BigNumber.from("4000000000"))
     let quotes1 = [quoteResponse1];
     await vault.connect(usdcTaker).purchase(0,0,quotes1);
     let quotes3: BytesLike[];
@@ -228,11 +228,11 @@ describe("fork unit test",()=>{
     console.log("================================================");
   });
   it("redeem USDE test with enough USDC",async ()=>{
-    let quoteResponse = genNotSwapData(BigNumber.from("1000000000"))
+    let quoteResponse = genNotSwapData(ARBITRUM_TOKENS.USDC,BigNumber.from("1000000000"))
     let quotes = [quoteResponse];
     await vault.connect(usdcTaker).purchase(0,0,quotes);
     let redeemAmount1 = ethers.utils.parseEther("500");
-    let quoteResponse5 = genNotSwapData(BigNumber.from("1000000000"));
+    let quoteResponse5 = genNotSwapData(ARBITRUM_TOKENS.USDC,BigNumber.from("1000000000"));
     await vault.connect(usdcTaker).redeem(0,0,redeemAmount1,USDC_ADDRESS,quoteResponse5);
     console.log("-----------vault usdc balance=",await usdc.balanceOf(vault.address));
     console.log("-----------vault wstETH balance",await wstETH.balanceOf(vault.address));
@@ -248,7 +248,7 @@ describe("fork unit test",()=>{
   });
 
   it("redeem USDE test without enough USDC",async ()=>{
-    let quoteResponse1 = genNotSwapData(BigNumber.from("4000000000"))
+    let quoteResponse1 = genNotSwapData(ARBITRUM_TOKENS.USDC,BigNumber.from("4000000000"))
     let quotes1 = [quoteResponse1];
     await vault.connect(usdcTaker).purchase(0,0,quotes1);
     let quotes3: BytesLike[];
@@ -316,7 +316,7 @@ describe("fork unit test",()=>{
     console.log("================================================");
   });
   it("withdraw test",async ()=>{
-    let quoteResponse1 = genNotSwapData(BigNumber.from("4000000000"))
+    let quoteResponse1 = genNotSwapData(ARBITRUM_TOKENS.USDC,BigNumber.from("4000000000"))
     let quotes1 = [quoteResponse1];
     await vault.connect(usdcTaker).purchase(0,0,quotes1);
     let quotes3: BytesLike[];
@@ -353,7 +353,7 @@ describe("fork unit test",()=>{
     console.log("================================================");
 
     let withdrawAmount = BigNumber.from("500000");
-    let quoteResponse7 = await genNotSwapData(withdrawAmount);
+    let quoteResponse7 = await genNotSwapData(ARBITRUM_TOKENS.USDC,withdrawAmount);
     await vault.connect(signer).withdraw(withdrawAmount,0,quoteResponse7);
     console.log("-----------signer usdc balance=",await usdc.balanceOf(signer.address));
     console.log("-----------totalCommission=",await vault.totalCommission());

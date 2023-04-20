@@ -3,7 +3,6 @@ import axios from "axios";
 import {HttpsProxyAgent} from "https-proxy-agent";
 import {BigNumber} from "ethers";
 import {ethers} from "hardhat";
-import {ARBITRUM_TOKENS} from "../constants";
 
 const ZEROEX_API_QUOTE_URL = process.env.ARBITRUM_ZEROEX_API_QUOTE_URL;
 const ONEINCH_API_QUOTE_URL = process.env.ARBITRUM_ONEINCH_API_QUOTE_URL;
@@ -58,9 +57,8 @@ export const http = axios.create({
   httpsAgent: new HttpsProxyAgent(`http://${process.env.PROXY_HOST}:${process.env.PROXY_PORT}`)
 })
 
-export function genNotSwapData(sellAmount: BigNumber) {
+export function genNotSwapData(sellToken: string,sellAmount: BigNumber) {
   const selector = "0x36e57cb7";
-  const sellToken = ARBITRUM_TOKENS.USDC;
   const buyToken = ethers.constants.AddressZero;
   return selector + ethers.utils.solidityPack(['address', 'address','uint256'], [ethers.utils.hexZeroPad(sellToken,32), ethers.utils.hexZeroPad(buyToken,32), ethers.utils.hexZeroPad(ethers.utils.arrayify(sellAmount), 32)]).substring(2);
 }
