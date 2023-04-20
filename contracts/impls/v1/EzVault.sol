@@ -227,7 +227,7 @@ contract EzVaultV1 is Initializable,ReentrancyGuardUpgradeable,PausableUpgradeab
         uint256 saleAmount = saleQty * getPrice(address(reserveToken)) / 1e18;
         require(parsedQuoteData.sellToken==address(reserveToken),WRONG_SELL_TOKEN);
         require(parsedQuoteData.buyToken==address(stableToken),WRONG_BUY_TOKEN);
-        require(parsedQuoteData.sellAmount==saleAmount,WRONG_AMOUNT);
+        require(parsedQuoteData.sellAmount==saleQty,WRONG_AMOUNT);
         uint256 minBuyAmount = convertAmt(parsedQuoteData.sellToken,parsedQuoteData.buyToken,parsedQuoteData.sellAmount) * 90 /100;
         require(parsedQuoteData.buyAmount>=minBuyAmount,WRONG_AMOUNT);
         _swap(channel_,quote_,parsedQuoteData.sellToken,parsedQuoteData.sellAmount);
