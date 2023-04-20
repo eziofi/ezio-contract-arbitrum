@@ -64,7 +64,7 @@ describe("fork unit test",()=>{
 
     //deploy USDEV1 contract
     const USDEV1Factory = await new USDEV1__factory(signer);
-    aToken = await upgrades.deployProxy(USDEV1Factory, ["Ezio Stablecoin","USDE"]) as USDEV1;
+    aToken = await upgrades.deployProxy(USDEV1Factory, ["Ezio Yield Bearing Stablecoin","USDE"]) as USDEV1;
     await aToken.deployed();
     console.log("-------------USDEV1 deployed to:", aToken.address);
     //deploy E2LPV1 contract

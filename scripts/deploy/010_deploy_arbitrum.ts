@@ -28,7 +28,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   let vault: EzVaultV1;
   //deploy USDEV1 contract
   const USDEV1Factory = new USDEV1__factory(signer);
-  aToken = await upgrades.deployProxy(USDEV1Factory, ["Ezio Stablecoin","USDE"],{timeout:600000,pollingInterval:10000}) as USDEV1;
+  aToken = await upgrades.deployProxy(USDEV1Factory, ["Ezio Yield Bearing Stablecoin","USDE"],{timeout:600000,pollingInterval:10000}) as USDEV1;
   await aToken.deployed();
   console.log("-------------USDEV1 deployed to:", aToken.address);
   await write(filePath,"USDEV1.json",JSON.stringify({"address":aToken.address,"abi":USDEV1__factory.abi}));
