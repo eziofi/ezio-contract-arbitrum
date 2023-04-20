@@ -47,8 +47,9 @@ describe("contract connect test in arbitrum network", function () {
     console.log("-----------vault wstETH=",await wstETH.balanceOf(vault.address));
     console.log("-----------aToken totalNetWorth=",await aToken.totalNetWorth());
     console.log("-----------aToken totalSupply=",await aToken.totalSupply());
-    console.log("-----------bToken totalSupply=",await bToken.totalSupply());
+    console.log("-----------aToken netWorth=",await aToken.netWorth());
     console.log("-----------bToken totalNetWorth=",await bToken.totalNetWorth());
+    console.log("-----------bToken totalSupply=",await bToken.totalSupply());
     console.log("-----------bToken netWorth=",await bToken.netWorth());
     console.log("-----------vault pooledA=",await vault.pooledA());
     console.log("-----------vault matchedA=",await vault.matchedA());
@@ -61,5 +62,6 @@ describe("contract connect test in arbitrum network", function () {
     console.log("-----------redeemFeeRateB=",await vault.redeemFeeRateB());
     console.log("-----------rewardRate=",await vault.rewardRate());
     console.log("-----------stakeRewardRate=",await vault.stakeRewardRate());
+    console.log("-----------totalCommission=",await vault.totalCommission());
   });
 });

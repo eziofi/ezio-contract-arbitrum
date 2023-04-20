@@ -1,30 +1,30 @@
 {
   "manifestVersion": "3.2",
   "admin": {
-    "address": "0xe5389a8207004c0844cE019c90Be41861BbB2046",
-    "txHash": "0x3e65657d28fdfec1b701e513024e9f8c36eb84e39f66f039635940fce143ffb8"
+    "address": "0xfAea51637c02760F44952ebF59d89A8228BBE64c",
+    "txHash": "0x03c8e721819e98936dbcae377b10273b131c510b8a815aa9fa629ab5e1bf1088"
   },
   "proxies": [
     {
-      "address": "0x7f34f335D4aaDee7B0ADbb152Bc61E8115247c84",
-      "txHash": "0xb1ff8c3194b6b1cbca959d7eeb75f1f9ed3a80051e4509ecea0427ec66e198d8",
+      "address": "0xa84F66c13080f695bd91855C8e681Faae18b573e",
+      "txHash": "0x6b275993f4ba7442c7f3af71ed19735c5cb4269b37840e9543676f8b8067506e",
       "kind": "transparent"
     },
     {
-      "address": "0xA673Af830c2Ad64Eba70984E0C3c9AF79916F625",
-      "txHash": "0x874cfee1facd730065708e4fdd69b2c2f0af37edbcc33a32b98fa5fd1ba361da",
+      "address": "0xf705623536c038a5cA2f7dd57172f4f5cAbb25c1",
+      "txHash": "0x0d944640f98433ce6ac4e06d811b35c9dd330709716d5d24aeecbaf4d640490d",
       "kind": "transparent"
     },
     {
-      "address": "0xc093b6D04A983164838cb9d41843DEF3CC8A6d32",
-      "txHash": "0xa4335a1c362e08f4585a672a0c3d40e85c52c716ddd26463a6f92a74e2f14279",
+      "address": "0xBf3EA19030d11786eD6069602fD626e52301712d",
+      "txHash": "0x664988e804b02936e5532065b0e14947de8b682ab485f555bdafd91626d0f9e0",
       "kind": "transparent"
     }
   ],
   "impls": {
-    "a2b12eb5165651611e326f4715f6beb6b337c9862944da9abd4e4dd1a921dd0f": {
-      "address": "0x01Afef09eD8c424727775A6b9be114FCDfA4A7f5",
-      "txHash": "0x1d5982989e49064cae83aa25e8d9debb34445b057c22275f47431072c951137d",
+    "d1b6d47768c526faae1367d7264fd1065eae0844977bcfa8106d6e6f7f693a4b": {
+      "address": "0xEC2Cb124345AeFFe2565DE9b289C9bd89B0BF2eF",
+      "txHash": "0xa192b9e4cc736cf9fb01398fcbd739a902954056317062d179ccbc4305316001",
       "layout": {
         "solcVersion": "0.8.8",
         "storage": [
@@ -177,7 +177,7 @@
             "label": "vault",
             "offset": 1,
             "slot": "351",
-            "type": "t_contract(IEzVault)6843",
+            "type": "t_contract(IEzVault)7236",
             "contract": "EzTokenV1",
             "src": "contracts\\impls\\v1\\EzToken.sol:17"
           },
@@ -219,7 +219,7 @@
             "label": "bytes32",
             "numberOfBytes": "32"
           },
-          "t_contract(IEzVault)6843": {
+          "t_contract(IEzVault)7236": {
             "label": "contract IEzVault",
             "numberOfBytes": "20"
           },
@@ -310,9 +310,9 @@
         }
       }
     },
-    "7a4284d6a762aa158973d396d824971d626fe46493b183ff47cd571b7ce8612a": {
-      "address": "0x9Cb895c058C6fc06AFa7C5b9988e1A98850a28cD",
-      "txHash": "0x1dd75adcac9fc472f5bd2280f99a81796ee6a317213abdb949eeabadb354aed9",
+    "43b957757a008f22ef8c64b6b9b44bb884e332a24c92ee2b0fd34587f72e07c1": {
+      "address": "0x52D61c553FC2d5A43DFE9e5e5790b44805292f19",
+      "txHash": "0xbe55b589f991029c93f07e953cadda5881387afb8327f668aa3938e832cf4902",
       "layout": {
         "solcVersion": "0.8.8",
         "storage": [
@@ -465,7 +465,7 @@
             "label": "vault",
             "offset": 1,
             "slot": "351",
-            "type": "t_contract(IEzVault)6843",
+            "type": "t_contract(IEzVault)7236",
             "contract": "EzTokenV1",
             "src": "contracts\\impls\\v1\\EzToken.sol:17"
           },
@@ -507,7 +507,7 @@
             "label": "bytes32",
             "numberOfBytes": "32"
           },
-          "t_contract(IEzVault)6843": {
+          "t_contract(IEzVault)7236": {
             "label": "contract IEzVault",
             "numberOfBytes": "20"
           },
@@ -598,9 +598,9 @@
         }
       }
     },
-    "72c6597782e81af3b1a8db6894fddc0b856f6f2e9cf2e2224a0f403c4a6c6f6a": {
-      "address": "0x9b7f40166B1cCCf6CdE8aA9a32F39F33db1FD3dD",
-      "txHash": "0x2d979ab9eca3a85baa4bf09361f00287a9b80bc18a4aa1241ebdeeee6fcfddec",
+    "209469c2e079b44c121b60fe774ce32f899ba821c3ab8232a7f571a107784104": {
+      "address": "0xB8257e1901e1f6bb08A2E068D2Ef327df1057569",
+      "txHash": "0x3d4e378d62a8514da3108d6236004e8d2a80c83ea45d83cd098de8290084484a",
       "layout": {
         "solcVersion": "0.8.8",
         "storage": [
@@ -646,9 +646,25 @@
             "src": "@openzeppelin\\contracts-upgradeable\\utils\\ContextUpgradeable.sol:36"
           },
           {
-            "label": "__gap",
+            "label": "_paused",
             "offset": 0,
             "slot": "101",
+            "type": "t_bool",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\PausableUpgradeable.sol:29"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\PausableUpgradeable.sol:116"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "151",
             "type": "t_array(t_uint256)50_storage",
             "contract": "ERC165Upgradeable",
             "src": "@openzeppelin\\contracts-upgradeable\\utils\\introspection\\ERC165Upgradeable.sol:41"
@@ -656,7 +672,7 @@
           {
             "label": "_roles",
             "offset": 0,
-            "slot": "151",
+            "slot": "201",
             "type": "t_mapping(t_bytes32,t_struct(RoleData)225_storage)",
             "contract": "AccessControlUpgradeable",
             "src": "@openzeppelin\\contracts-upgradeable\\access\\AccessControlUpgradeable.sol:61"
@@ -664,7 +680,7 @@
           {
             "label": "__gap",
             "offset": 0,
-            "slot": "152",
+            "slot": "202",
             "type": "t_array(t_uint256)49_storage",
             "contract": "AccessControlUpgradeable",
             "src": "@openzeppelin\\contracts-upgradeable\\access\\AccessControlUpgradeable.sol:259"
@@ -672,7 +688,7 @@
           {
             "label": "_roleMembers",
             "offset": 0,
-            "slot": "201",
+            "slot": "251",
             "type": "t_mapping(t_bytes32,t_struct(AddressSet)3833_storage)",
             "contract": "AccessControlEnumerableUpgradeable",
             "src": "@openzeppelin\\contracts-upgradeable\\access\\AccessControlEnumerableUpgradeable.sol:22"
@@ -680,7 +696,7 @@
           {
             "label": "__gap",
             "offset": 0,
-            "slot": "202",
+            "slot": "252",
             "type": "t_array(t_uint256)49_storage",
             "contract": "AccessControlEnumerableUpgradeable",
             "src": "@openzeppelin\\contracts-upgradeable\\access\\AccessControlEnumerableUpgradeable.sol:76"
@@ -688,7 +704,7 @@
           {
             "label": "tokenAggregators",
             "offset": 0,
-            "slot": "251",
+            "slot": "301",
             "type": "t_mapping(t_address,t_address)",
             "contract": "ConversionUpgradeable",
             "src": "contracts\\impls\\v1\\Conversion.sol:18"
@@ -696,7 +712,7 @@
           {
             "label": "stableToken",
             "offset": 0,
-            "slot": "252",
+            "slot": "302",
             "type": "t_contract(IERC20MetadataUpgradeable)1768",
             "contract": "ConversionUpgradeable",
             "src": "contracts\\impls\\v1\\Conversion.sol:20"
@@ -704,7 +720,7 @@
           {
             "label": "reserveToken",
             "offset": 0,
-            "slot": "253",
+            "slot": "303",
             "type": "t_contract(IERC20MetadataUpgradeable)1768",
             "contract": "ConversionUpgradeable",
             "src": "contracts\\impls\\v1\\Conversion.sol:22"
@@ -712,114 +728,114 @@
           {
             "label": "__gap",
             "offset": 0,
-            "slot": "254",
+            "slot": "304",
             "type": "t_array(t_uint256)47_storage",
             "contract": "ConversionUpgradeable",
-            "src": "contracts\\impls\\v1\\Conversion.sol:89"
+            "src": "contracts\\impls\\v1\\Conversion.sol:87"
           },
           {
             "label": "__gap",
             "offset": 0,
-            "slot": "301",
+            "slot": "351",
             "type": "t_array(t_uint256)50_storage",
             "contract": "SwapCollectorUpgradeable",
-            "src": "contracts\\impls\\v1\\SwapCollector.sol:65"
+            "src": "contracts\\impls\\v1\\SwapCollector.sol:121"
           },
           {
             "label": "aToken",
             "offset": 0,
-            "slot": "351",
-            "type": "t_contract(USDEV1)6726",
-            "contract": "EzVaultV1",
-            "src": "contracts\\impls\\v1\\EzVault.sol:29"
-          },
-          {
-            "label": "bToken",
-            "offset": 0,
-            "slot": "352",
-            "type": "t_contract(E2LPV1)4448",
+            "slot": "401",
+            "type": "t_contract(USDEV1)7156",
             "contract": "EzVaultV1",
             "src": "contracts\\impls\\v1\\EzVault.sol:31"
           },
           {
-            "label": "totalReserve",
+            "label": "bToken",
             "offset": 0,
-            "slot": "353",
-            "type": "t_uint256",
+            "slot": "402",
+            "type": "t_contract(E2LPV1)4440",
             "contract": "EzVaultV1",
             "src": "contracts\\impls\\v1\\EzVault.sol:33"
           },
           {
-            "label": "pooledA",
+            "label": "totalReserve",
             "offset": 0,
-            "slot": "354",
+            "slot": "403",
             "type": "t_uint256",
             "contract": "EzVaultV1",
             "src": "contracts\\impls\\v1\\EzVault.sol:35"
           },
           {
-            "label": "matchedA",
+            "label": "pooledA",
             "offset": 0,
-            "slot": "355",
+            "slot": "404",
             "type": "t_uint256",
             "contract": "EzVaultV1",
             "src": "contracts\\impls\\v1\\EzVault.sol:37"
           },
           {
-            "label": "rewardRate",
+            "label": "matchedA",
             "offset": 0,
-            "slot": "356",
-            "type": "t_uint16",
+            "slot": "405",
+            "type": "t_uint256",
             "contract": "EzVaultV1",
             "src": "contracts\\impls\\v1\\EzVault.sol:39"
           },
           {
-            "label": "stakeRewardRate",
-            "offset": 2,
-            "slot": "356",
+            "label": "rewardRate",
+            "offset": 0,
+            "slot": "406",
             "type": "t_uint16",
             "contract": "EzVaultV1",
-            "src": "contracts\\impls\\v1\\EzVault.sol:43"
+            "src": "contracts\\impls\\v1\\EzVault.sol:41"
+          },
+          {
+            "label": "stakeRewardRate",
+            "offset": 2,
+            "slot": "406",
+            "type": "t_uint16",
+            "contract": "EzVaultV1",
+            "src": "contracts\\impls\\v1\\EzVault.sol:45"
           },
           {
             "label": "lastRebaseTime",
             "offset": 0,
-            "slot": "357",
+            "slot": "407",
             "type": "t_uint256",
             "contract": "EzVaultV1",
-            "src": "contracts\\impls\\v1\\EzVault.sol:49"
+            "src": "contracts\\impls\\v1\\EzVault.sol:51"
           },
           {
             "label": "redeemFeeRateA",
             "offset": 0,
-            "slot": "358",
+            "slot": "408",
             "type": "t_uint16",
             "contract": "EzVaultV1",
-            "src": "contracts\\impls\\v1\\EzVault.sol:53"
+            "src": "contracts\\impls\\v1\\EzVault.sol:55"
           },
           {
             "label": "redeemFeeRateB",
             "offset": 2,
-            "slot": "358",
+            "slot": "408",
             "type": "t_uint16",
             "contract": "EzVaultV1",
-            "src": "contracts\\impls\\v1\\EzVault.sol:57"
+            "src": "contracts\\impls\\v1\\EzVault.sol:59"
           },
           {
             "label": "totalCommission",
             "offset": 0,
-            "slot": "359",
+            "slot": "409",
             "type": "t_uint256",
             "contract": "EzVaultV1",
-            "src": "contracts\\impls\\v1\\EzVault.sol:63"
+            "src": "contracts\\impls\\v1\\EzVault.sol:65"
           },
           {
             "label": "changeList",
             "offset": 0,
-            "slot": "360",
-            "type": "t_mapping(t_uint8,t_struct(ChangeData)4645_storage)",
+            "slot": "410",
+            "type": "t_mapping(t_uint8,t_struct(ChangeData)4644_storage)",
             "contract": "EzVaultV1",
-            "src": "contracts\\impls\\v1\\EzVault.sol:65"
+            "src": "contracts\\impls\\v1\\EzVault.sol:67"
           }
         ],
         "types": {
@@ -851,7 +867,7 @@
             "label": "bytes32",
             "numberOfBytes": "32"
           },
-          "t_contract(E2LPV1)4448": {
+          "t_contract(E2LPV1)4440": {
             "label": "contract E2LPV1",
             "numberOfBytes": "20"
           },
@@ -859,7 +875,7 @@
             "label": "contract IERC20MetadataUpgradeable",
             "numberOfBytes": "20"
           },
-          "t_contract(USDEV1)6726": {
+          "t_contract(USDEV1)7156": {
             "label": "contract USDEV1",
             "numberOfBytes": "20"
           },
@@ -883,7 +899,7 @@
             "label": "mapping(bytes32 => uint256)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint8,t_struct(ChangeData)4645_storage)": {
+          "t_mapping(t_uint8,t_struct(ChangeData)4644_storage)": {
             "label": "mapping(uint8 => struct EzVaultV1.ChangeData)",
             "numberOfBytes": "32"
           },
@@ -899,7 +915,7 @@
             ],
             "numberOfBytes": "64"
           },
-          "t_struct(ChangeData)4645_storage": {
+          "t_struct(ChangeData)4644_storage": {
             "label": "struct EzVaultV1.ChangeData",
             "members": [
               {

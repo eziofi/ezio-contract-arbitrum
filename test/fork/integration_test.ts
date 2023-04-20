@@ -55,22 +55,20 @@ describe("fork integration test",()=>{
     });
 
     //deploy USDEV1 contract
-    const USDEV1Factory = await new USDEV1__factory(signer);
-    aToken = await upgrades.deployProxy(USDEV1Factory, ["Ezio Stablecoin","USDE"]) as USDEV1;
+    const USDEV1Factory = new USDEV1__factory(signer);
+    aToken = await upgrades.deployProxy(USDEV1Factory, ["Ezio Stablecoin","USDE"],{timeout:600000,pollingInterval:10000}) as USDEV1;
     await aToken.deployed();
     console.log("-------------USDEV1 deployed to:", aToken.address);
     //deploy E2LPV1 contract
-    const E2LPV1Factory = await new E2LPV1__factory(signer);
-    bToken = await upgrades.deployProxy(E2LPV1Factory, ["Ezio 2x Leverage wstETH Index","E2LP"]) as E2LPV1;
+    const E2LPV1Factory = new E2LPV1__factory(signer);
+    bToken = await upgrades.deployProxy(E2LPV1Factory, ["Ezio 2x Leverage wstETH Index","E2LP"],{timeout:600000,pollingInterval:10000}) as E2LPV1;
     await bToken.deployed();
     console.log("-------------E2LP deployed to:", bToken.address);
     //deploy EzVaultV1 contract
-    const EzVaultV1Factory = await new EzVaultV1__factory(signer);
-    vault = await upgrades.deployProxy(EzVaultV1Factory, [USDC_ADDRESS,WSTETH_ADDRESS,aToken.address,bToken.address,137,50,10,firstRebaseTime()]) as EzVaultV1;
+    const EzVaultV1Factory = new EzVaultV1__factory(signer);
+    vault = await upgrades.deployProxy(EzVaultV1Factory, [USDC_ADDRESS,WSTETH_ADDRESS,aToken.address,bToken.address,137,50,10,firstRebaseTime()],{timeout:600000,pollingInterval:10000}) as EzVaultV1;
     await vault.deployed();
     console.log("-------------EzVaultV1 deployed to:", vault.address);
-    await usdt.connect(usdtTaker).approve(vault.address,BigNumber.from("100000000000"));
-    await usdc.connect(usdcTaker).approve(vault.address,BigNumber.from("100000000000"));
     //set chainlink price aggregator
     await vault.setAggregators(USDC_ADDRESS,"0x50834F3163758fcC1Df9973b6e91f0F0F0434aD3");
     await vault.setAggregators(USDT_ADDRESS,"0x3f3f5dF88dC9F13eac63DF89EC16ef6e7E25DdE7");
@@ -88,6 +86,8 @@ describe("fork integration test",()=>{
     await aToken.contact(vault.address);
     //bToken contact vault
     await bToken.contact(vault.address);
+    await usdt.connect(usdtTaker).approve(vault.address,BigNumber.from("100000000000"));
+    await usdc.connect(usdcTaker).approve(vault.address,BigNumber.from("100000000000"));
   });
 
   it("Process testing",async ()=>{

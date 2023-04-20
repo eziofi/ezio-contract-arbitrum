@@ -26,41 +26,41 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   let aToken: USDEV1;
   let bToken: E2LPV1;
   let vault: EzVaultV1;
-  //发布USDEV1合约
-  const USDEV1Factory = await ethers.getContractFactory("USDEV1",signer);
+  //deploy USDEV1 contract
+  const USDEV1Factory = new USDEV1__factory(signer);
   aToken = await upgrades.deployProxy(USDEV1Factory, ["Ezio Stablecoin","USDE"],{timeout:600000,pollingInterval:10000}) as USDEV1;
   await aToken.deployed();
   console.log("-------------USDEV1 deployed to:", aToken.address);
   await write(filePath,"USDEV1.json",JSON.stringify({"address":aToken.address,"abi":USDEV1__factory.abi}));
-  //发布E2LPV1合约
-  const E2LPV1Factory = await ethers.getContractFactory("E2LPV1",signer);
+  //deploy E2LPV1 contract
+  const E2LPV1Factory = new E2LPV1__factory(signer);
   bToken = await upgrades.deployProxy(E2LPV1Factory, ["Ezio 2x Leverage wstETH Index","E2LP"],{timeout:600000,pollingInterval:10000}) as E2LPV1;
   await bToken.deployed();
   console.log("-------------E2LPV1 deployed to:", bToken.address);
   await write(filePath,"E2LPV1.json",JSON.stringify({"address":bToken.address,"abi":E2LPV1__factory.abi}));
-  //发布vault合约
+  //deploy EzVaultV1 contract
   const EzVaultV1Factory = new EzVaultV1__factory(signer);
-  vault = await upgrades.deployProxy(EzVaultV1Factory, [USDC_ADDRESS,WSTETH_ADDRESS,aToken.address,bToken.address,137,50,10,firstRebaseTime()]) as EzVaultV1;
+  vault = await upgrades.deployProxy(EzVaultV1Factory, [USDC_ADDRESS,WSTETH_ADDRESS,aToken.address,bToken.address,137,50,10,firstRebaseTime()],{timeout:600000,pollingInterval:10000}) as EzVaultV1;
   await vault.deployed();
   console.log("-------------EzVaultV1 deployed to:", vault.address);
   await write(filePath,"EzVaultV1.json",JSON.stringify({"address":vault.address,"abi":EzVaultV1__factory.abi}));
-  //设置chainlink价格聚合器地址
+  //set chainlink price aggregator
   await vault.setAggregators(USDC_ADDRESS,"0x50834F3163758fcC1Df9973b6e91f0F0F0434aD3");
   await vault.setAggregators(USDT_ADDRESS,"0x3f3f5dF88dC9F13eac63DF89EC16ef6e7E25DdE7");
   await vault.setAggregators(MAINNET_TOKENS.stETH,"0x07C5b924399cc23c24a95c8743DE4006a32b7f2a");
   await vault.setAggregators(ethers.constants.AddressZero,"0xB1552C5e96B312d0Bf8b554186F846C40614a540");
-  //设定合约发布时reserveToken每天的质押奖励
+  //set StakeRewardRate
   await vault.setStakeRewardRate(115);
-  //approve给0x和1inch信用额度
+  //approve 0x and 1inch
   await vault.setApprove(USDC_ADDRESS,0,BigNumber.from("10000000000"));
   await vault.setApprove(USDT_ADDRESS,0,BigNumber.from("10000000000"));
   await vault.setApprove(WSTETH_ADDRESS, 0, ethers.utils.parseEther("10"));
   await vault.setApprove(USDC_ADDRESS,1,BigNumber.from("10000000000"));
   await vault.setApprove(USDT_ADDRESS,1,BigNumber.from("10000000000"));
   await vault.setApprove(WSTETH_ADDRESS, 1, ethers.utils.parseEther("10"));
-  //aToken关联主合约
+  //aToken contact vault
   await aToken.contact(vault.address);
-  //bToken关联主合约
+  //bToken contact vault
   await bToken.contact(vault.address);
 };
 
