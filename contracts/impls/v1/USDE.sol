@@ -34,7 +34,7 @@ contract USDEV1 is Initializable, EzTokenV1 {
   * @return uint256   The net value per aToken
   */
   function netWorth() external view virtual returns (uint256){
-    return totalSupply()==0?1e6:totalNetWorth()*1e18/totalSupply();
+    return totalSupply()<1e16?1e6:totalNetWorth()*1e18/totalSupply();
   }
 
 }

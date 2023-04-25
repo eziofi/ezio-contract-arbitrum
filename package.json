@@ -9,7 +9,7 @@
     "start": "hardhat node",
     "test:arbitrum": "hardhat test test/fork/integration_test.ts",
     "deploy:arbitrum": "hardhat --network arbitrum deploy",
-    "verify:arbitrum": "hardhat verify --network arbitrum 0xAf7bBB0B243Afc0a1E7f62Ff87428a742c84551f",
+    "verify:arbitrum": "hardhat verify --network arbitrum 0xEb61f6C75Ed335A9fA1e8e0cD105E1558D07D804",
     "upgrade:arbitrum": "hardhat --network arbitrum run ./scripts/upgrade/ezio_upgrade.ts",
     "grant-role:arbitrum": "hardhat --network arbitrum run ./scripts/upgrade/ezio_grant_role.ts",
     "change-proxy-admin:arbitrum": "hardhat --network arbitrum run ./scripts/upgrade/ezio_change_proxy_admin.ts"

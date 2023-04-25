@@ -1,6 +1,6 @@
 import { ethers } from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
-import { Contract } from "ethers";
+import {BigNumber, Contract} from "ethers";
 import {
   EzVaultV1,
   EzVaultV1__factory,
@@ -63,5 +63,11 @@ describe("contract connect test in arbitrum network", function () {
     console.log("-----------rewardRate=",await vault.rewardRate());
     console.log("-----------stakeRewardRate=",await vault.stakeRewardRate());
     console.log("-----------totalCommission=",await vault.totalCommission());
+/*    let realUsdc = await usdc.balanceOf(vault.address) as BigNumber;
+    let realWsteth =  (await wstETH.balanceOf(vault.address)) as BigNumber;
+    let realWSTETH = realWsteth.mul(await vault.getPrice(WSTETH_ADDRESS)).div(ethers.utils.parseEther("1"));
+    let realAll = realUsdc.add(realWSTETH);
+    console.log("----------realAll=",realAll);
+    console.log("----------All=",await vault.totalNetWorth());*/
   });
 });

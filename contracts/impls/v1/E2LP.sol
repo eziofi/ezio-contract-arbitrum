@@ -26,7 +26,7 @@ contract E2LPV1 is Initializable, EzTokenV1{
   * @return uint256  Net Value of bToken
   */
   function netWorth() external view returns(uint256){
-    return totalSupply()==0?1e6:totalNetWorth()*1e18/totalSupply();
+    return totalSupply()<1e16?1e6:totalNetWorth()*1e18/totalSupply();
   }
 
   /**

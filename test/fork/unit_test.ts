@@ -74,7 +74,7 @@ describe("fork unit test",()=>{
     console.log("-------------E2LP deployed to:", bToken.address);
     //deploy EzVaultV1 contract
     const EzVaultV1Factory = await new EzVaultV1__factory(signer);
-    vault = await upgrades.deployProxy(EzVaultV1Factory, [USDC_ADDRESS,WSTETH_ADDRESS,aToken.address,bToken.address,137,50,10,firstRebaseTime()]) as EzVaultV1;
+    vault = await upgrades.deployProxy(EzVaultV1Factory, [USDC_ADDRESS,WSTETH_ADDRESS,aToken.address,bToken.address,137,50,20,firstRebaseTime()]) as EzVaultV1;
     await vault.deployed();
     console.log("-------------EzVaultV1 deployed to:", vault.address);
     await usdt.connect(usdtTaker).approve(vault.address,BigNumber.from("100000000000"));
